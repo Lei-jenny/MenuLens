@@ -1351,7 +1351,13 @@
                 } else {
                     dataSource = './menu_en.js';
                     console.log('⚠️ No match found, using default English menu - loading local file');
-                    showNotification('⚠️ No language match found, using English menu', 'warning', 5000);
+                    const warningMsg = `⚠️ Filename "${filename}" doesn't match expected patterns (menu_en, menu_ja, menu_zh). Using English menu as default.`;
+                    showNotification(warningMsg, 'warning', 5000);
+                    console.warn('Expected filename patterns:');
+                    console.warn('- menu_en.jpg, menu_english.jpg (for English menu)');
+                    console.warn('- menu_ja.jpg, menu_japanese.jpg (for Japanese menu)');
+                    console.warn('- menu_zh.jpg, menu_chinese.jpg (for Chinese menu)');
+                    console.warn('Current filename:', filename);
                 }
                 
                 console.log('Loading from local file:', dataSource);
@@ -1366,6 +1372,19 @@
                     const errorMsg = `❌ File not found: ${dataSource} (Status: ${response.status})`;
                     console.error(errorMsg);
                     showNotification(errorMsg, 'error', 5000);
+                    
+                    // Explain possible reasons for file not found
+                    console.error('Possible reasons for file not found:');
+                    console.error('1. JavaScript file not uploaded to Vercel');
+                    console.error('2. File path is incorrect');
+                    console.error('3. File name mismatch');
+                    console.error('4. CORS restrictions');
+                    console.error('Required files for Vercel deployment:');
+                    console.error('- menu_en.js (for English menu)');
+                    console.error('- menu_ja.js (for Japanese menu)');
+                    console.error('- menu_zh.js (for Chinese menu)');
+                    console.error('- complete-menu-data.js (fallback)');
+                    
                     throw new Error(`Local file not found: ${response.status}`);
                 }
                 
@@ -1394,18 +1413,29 @@
                 console.log('- window.polishMenuData:', window.polishMenuData);
                 console.log('- window.sichuanMenuData:', window.sichuanMenuData);
                 console.log('- window.menuData:', window.menuData);
+                showNotification('🔍 Checking for menu data variables...', 'info', 3000);
                 
                 if (window.polishMenuData) {
                     loadedData = window.polishMenuData;
                     console.log('✅ Found polishMenuData');
+                    showNotification('✅ Found polishMenuData variable', 'success', 3000);
                 } else if (window.sichuanMenuData) {
                     loadedData = window.sichuanMenuData;
                     console.log('✅ Found sichuanMenuData');
+                    showNotification('✅ Found sichuanMenuData variable', 'success', 3000);
                 } else if (window.menuData) {
                     loadedData = window.menuData;
                     console.log('✅ Found menuData');
+                    showNotification('✅ Found menuData variable', 'success', 3000);
                 } else {
                     console.log('⚠️ No known variable found, trying fallback');
+                    const warningMsg = '⚠️ No menu data variables found after script execution. Expected: polishMenuData, sichuanMenuData, or menuData';
+                    showNotification(warningMsg, 'warning', 5000);
+                    console.warn('Script executed but no expected variables found:');
+                    console.warn('- Expected: window.polishMenuData');
+                    console.warn('- Expected: window.sichuanMenuData');
+                    console.warn('- Expected: window.menuData');
+                    console.warn('Available window variables:', Object.keys(window).filter(key => key.includes('Menu') || key.includes('menu')));
                     loadedData = menuData;
                 }
                 
@@ -1413,13 +1443,16 @@
                 console.log('Number of dishes:', loadedData ? loadedData.dishes.length : 'No dishes');
                 console.log('Data structure keys:', loadedData ? Object.keys(loadedData) : 'No data');
                 console.log('First dish sample:', loadedData && loadedData.dishes ? loadedData.dishes[0] : 'No dishes');
+                showNotification(`📊 Data validation: ${loadedData ? loadedData.dishes.length : 0} dishes found`, 'info', 3000);
                 
                 // Validate the loaded data
                 if (!loadedData || !loadedData.dishes || loadedData.dishes.length === 0) {
+                    const errorMsg = `❌ Data validation failed: ${loadedData ? loadedData.dishes.length : 0} dishes found`;
                     console.error('❌ Data validation failed:');
                     console.error('- loadedData exists:', !!loadedData);
                     console.error('- dishes exists:', loadedData ? !!loadedData.dishes : false);
                     console.error('- dishes length:', loadedData ? loadedData.dishes.length : 0);
+                    showNotification(errorMsg, 'error', 5000);
                     throw new Error('Invalid menu data structure');
                 }
                 
@@ -1428,13 +1461,16 @@
                 
                 return loadedData;
             } catch (error) {
+                const errorMsg = `❌ Local data loading failed: ${error.message}`;
                 console.error('Error loading local menu data:', error);
                 console.error('Error details:', error.message);
                 console.error('Stack trace:', error.stack);
+                showNotification(errorMsg, 'error', 5000);
                 
                 // Try to load fallback data
                 try {
                     console.log('Attempting to load fallback data from complete-menu-data.js...');
+                    showNotification('🔄 Trying fallback data source...', 'info', 3000);
                     const fallbackResponse = await fetch('./complete-menu-data.js');
                     if (fallbackResponse.ok) {
                         const fallbackContent = await fallbackResponse.text();
@@ -1444,25 +1480,38 @@
                         if (window.polishMenuData) {
                             fallbackData = window.polishMenuData;
                             console.log('✅ Found polishMenuData in fallback file');
+                            showNotification('✅ Found polishMenuData in fallback', 'success', 3000);
                         } else if (window.sichuanMenuData) {
                             fallbackData = window.sichuanMenuData;
                             console.log('✅ Found sichuanMenuData in fallback file');
+                            showNotification('✅ Found sichuanMenuData in fallback', 'success', 3000);
                         }
                         
                         if (fallbackData && fallbackData.dishes && fallbackData.dishes.length > 0) {
                             console.log('✅ Fallback data loaded successfully:', fallbackData.dishes.length, 'dishes');
-                            showNotification(`Using fallback menu data (${fallbackData.dishes.length} dishes)`, 'info');
+                            showNotification(`✅ Using fallback menu data (${fallbackData.dishes.length} dishes)`, 'success', 5000);
                             return fallbackData;
+                        } else {
+                            showNotification('❌ Fallback data validation failed', 'error', 5000);
                         }
+                    } else {
+                        const fallbackErrorMsg = `❌ Fallback file not found: complete-menu-data.js (Status: ${fallbackResponse.status})`;
+                        showNotification(fallbackErrorMsg, 'error', 5000);
+                        console.error('Fallback file missing - this means:');
+                        console.error('1. complete-menu-data.js was not uploaded to Vercel');
+                        console.error('2. File path is incorrect');
+                        console.error('3. This is a critical fallback file that should always be present');
                     }
                 } catch (fallbackError) {
+                    const fallbackErrorMsg = `❌ Fallback loading failed: ${fallbackError.message}`;
                     console.error('Fallback data loading failed:', fallbackError);
+                    showNotification(fallbackErrorMsg, 'error', 5000);
                 }
                 
                 // Use embedded fallback data as final fallback
                 console.log('⚠️ All external data loading failed, using embedded fallback data...');
                 console.log('Embedded data dishes count:', embeddedFallbackData.dishes.length);
-                showNotification('Using embedded sample data (3 dishes)', 'info');
+                showNotification('⚠️ Using embedded sample data (3 dishes) - External data unavailable', 'warning', 5000);
                 return embeddedFallbackData;
             }
         }
