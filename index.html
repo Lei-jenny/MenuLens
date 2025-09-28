@@ -1365,16 +1365,30 @@
                 console.log('First 200 characters:', scriptContent.substring(0, 200));
                 
                 // Execute the script to get the menuData
-                eval(scriptContent);
+                try {
+                    eval(scriptContent);
+                    console.log('Script executed successfully');
+                } catch (evalError) {
+                    console.error('Error executing script:', evalError);
+                    throw new Error('Failed to execute script content');
+                }
                 
                 // Check for different variable names used in different files
                 let loadedData = null;
+                console.log('Checking for variables:');
+                console.log('- window.polishMenuData:', window.polishMenuData);
+                console.log('- window.sichuanMenuData:', window.sichuanMenuData);
+                console.log('- window.menuData:', window.menuData);
+                
                 if (window.polishMenuData) {
                     loadedData = window.polishMenuData;
                     console.log('✅ Found polishMenuData');
                 } else if (window.sichuanMenuData) {
                     loadedData = window.sichuanMenuData;
                     console.log('✅ Found sichuanMenuData');
+                } else if (window.menuData) {
+                    loadedData = window.menuData;
+                    console.log('✅ Found menuData');
                 } else {
                     console.log('⚠️ No known variable found, trying fallback');
                     loadedData = menuData;
@@ -1965,6 +1979,46 @@
             } catch (error) {
                 console.error('Error accessing local file:', error);
                 return false;
+            }
+        }
+
+        // Test function to verify JavaScript execution
+        async function testJavaScriptExecution() {
+            console.log('Testing JavaScript execution...');
+            try {
+                const response = await fetch('./menu_ja.js');
+                if (response.ok) {
+                    const content = await response.text();
+                    console.log('Content loaded, length:', content.length);
+                    
+                    // Clear any existing variables
+                    delete window.polishMenuData;
+                    delete window.sichuanMenuData;
+                    delete window.menuData;
+                    
+                    // Execute the script
+                    eval(content);
+                    
+                    // Check what variables were created
+                    console.log('Variables after execution:');
+                    console.log('- polishMenuData:', window.polishMenuData);
+                    console.log('- sichuanMenuData:', window.sichuanMenuData);
+                    console.log('- menuData:', window.menuData);
+                    
+                    if (window.polishMenuData) {
+                        console.log('✅ polishMenuData found with', window.polishMenuData.dishes.length, 'dishes');
+                        return window.polishMenuData;
+                    } else {
+                        console.log('❌ No polishMenuData found');
+                        return null;
+                    }
+                } else {
+                    console.error('Failed to load file:', response.status);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error testing JavaScript execution:', error);
+                return null;
             }
         }
 
