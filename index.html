@@ -140,6 +140,7 @@
             color: white;
             border: 2px solid rgba(255, 255, 255, 0.3);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .btn-secondary:hover {
@@ -1140,7 +1141,7 @@
                 <div class="upload-icon">📤</div>
                 <h3>Drop your menu here or click to browse</h3>
                 <p>Supports JPG, PNG, and PDF files</p>
-                <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;" onchange="handleFileUpload(this)">
+                <input type="file" id="fileInput" accept="image/*,.pdf" style="display: none;" onchange="handleFileUpload(this)" title="Upload menu image file" aria-label="Upload menu image file">
                 
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar" id="progressBar"></div>
@@ -1448,6 +1449,12 @@
                     console.warn('Script content that was executed:');
                     console.warn(scriptContent.substring(0, 1000));
                     console.warn('This suggests the JavaScript file may not contain the expected variable declarations');
+                    console.warn('FULL SCRIPT CONTENT:');
+                    console.warn(scriptContent);
+                    console.warn('Script content length:', scriptContent.length);
+                    console.warn('Does script contain "polishMenuData"?', scriptContent.includes('polishMenuData'));
+                    console.warn('Does script contain "sichuanMenuData"?', scriptContent.includes('sichuanMenuData'));
+                    console.warn('Does script contain "menuData"?', scriptContent.includes('menuData'));
                     loadedData = menuData;
                 }
                 
