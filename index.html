@@ -1849,16 +1849,12 @@
             
             // Show results section
             document.getElementById('menuResults').classList.remove('hidden');
-            document.getElementById('aiGallery').classList.remove('hidden');
             
             // Render dishes with pagination
             renderDishes();
             
             // Update pagination
             updatePagination();
-            
-            // Populate AI gallery
-            populateAIGallery();
 
             // Scroll to results
             document.getElementById('menuResults').scrollIntoView({ behavior: 'smooth' });
@@ -2069,22 +2065,6 @@
             }, 2000);
         }
 
-        function populateAIGallery() {
-            const galleryGrid = document.getElementById('galleryGrid');
-            const sampleImages = [
-                { emoji: '🍜', caption: 'Japanese-style ramen with rich broth and traditional toppings' },
-                { emoji: '🥟', caption: 'Authentic Chinese dumplings with dipping sauce' },
-                { emoji: '🥩', caption: 'Perfectly cooked medium-rare ribeye steak with sides' },
-                { emoji: '🥗', caption: 'Fresh Mediterranean salad with vibrant ingredients' }
-            ];
-
-            galleryGrid.innerHTML = sampleImages.map(img => `
-                <div class="gallery-item">
-                    <div class="gallery-image">${img.emoji}</div>
-                    <div class="gallery-caption">${img.caption}</div>
-                </div>
-            `).join('');
-        }
 
         // Initialize the application
         function initializeApp() {
