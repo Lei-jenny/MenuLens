@@ -1382,9 +1382,15 @@
                 
                 console.log('Menu data loaded:', loadedData);
                 console.log('Number of dishes:', loadedData ? loadedData.dishes.length : 'No dishes');
+                console.log('Data structure keys:', loadedData ? Object.keys(loadedData) : 'No data');
+                console.log('First dish sample:', loadedData && loadedData.dishes ? loadedData.dishes[0] : 'No dishes');
                 
                 // Validate the loaded data
                 if (!loadedData || !loadedData.dishes || loadedData.dishes.length === 0) {
+                    console.error('❌ Data validation failed:');
+                    console.error('- loadedData exists:', !!loadedData);
+                    console.error('- dishes exists:', loadedData ? !!loadedData.dishes : false);
+                    console.error('- dishes length:', loadedData ? loadedData.dishes.length : 0);
                     throw new Error('Invalid menu data structure');
                 }
                 
@@ -1425,8 +1431,9 @@
                 }
                 
                 // Use embedded fallback data as final fallback
-                console.log('Using embedded fallback data...');
-                showNotification('Using embedded sample data', 'info');
+                console.log('⚠️ All external data loading failed, using embedded fallback data...');
+                console.log('Embedded data dishes count:', embeddedFallbackData.dishes.length);
+                showNotification('Using embedded sample data (3 dishes)', 'info');
                 return embeddedFallbackData;
             }
         }
