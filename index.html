@@ -1417,7 +1417,24 @@
                     delete window.menuData;
                     console.log('Cleared existing variables');
                     
-                    eval(scriptContent);
+                    // Modify script content to ensure global variable assignment
+                    let modifiedScript = scriptContent;
+                    if (modifiedScript.includes('const polishMenuData')) {
+                        modifiedScript = modifiedScript.replace(/const polishMenuData/g, 'window.polishMenuData');
+                        console.log('Modified script to use window.polishMenuData');
+                    }
+                    if (modifiedScript.includes('const sichuanMenuData')) {
+                        modifiedScript = modifiedScript.replace(/const sichuanMenuData/g, 'window.sichuanMenuData');
+                        console.log('Modified script to use window.sichuanMenuData');
+                    }
+                    if (modifiedScript.includes('const menuData')) {
+                        modifiedScript = modifiedScript.replace(/const menuData/g, 'window.menuData');
+                        console.log('Modified script to use window.menuData');
+                    }
+                    
+                    console.log('Modified script preview:', modifiedScript.substring(0, 200));
+                    
+                    eval(modifiedScript);
                     console.log('Script executed successfully');
                     showNotification('⚙️ Script executed successfully', 'success', 3000);
                     
@@ -1429,6 +1446,19 @@
                     console.log('- All window variables with "menu":', Object.keys(window).filter(key => key.toLowerCase().includes('menu')));
                     console.log('- All window variables with "polish":', Object.keys(window).filter(key => key.toLowerCase().includes('polish')));
                     console.log('- All window variables with "data":', Object.keys(window).filter(key => key.toLowerCase().includes('data')));
+                    
+                    // Try alternative variable access methods
+                    console.log('Alternative variable checks:');
+                    console.log('- typeof polishMenuData:', typeof polishMenuData);
+                    console.log('- typeof window.polishMenuData:', typeof window.polishMenuData);
+                    console.log('- polishMenuData directly:', polishMenuData);
+                    
+                    // Force assign to window if it exists but not in window scope
+                    if (typeof polishMenuData !== 'undefined' && !window.polishMenuData) {
+                        console.log('Assigning polishMenuData to window scope...');
+                        window.polishMenuData = polishMenuData;
+                        console.log('After assignment - window.polishMenuData:', window.polishMenuData);
+                    }
                 } catch (evalError) {
                     const errorMsg = `❌ Script execution failed: ${evalError.message}`;
                     console.error('Error executing script:', evalError);
