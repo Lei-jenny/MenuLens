@@ -1332,24 +1332,30 @@
             try {
                 console.log('Loading menu data for filename:', filename);
                 console.log('Filename lowercase:', filename.toLowerCase());
+                showNotification(`🔍 Analyzing filename: ${filename}`, 'info', 3000);
                 
                 // Determine which local file to load based on filename
                 let dataSource = '';
                 if (filename.toLowerCase().includes('menu_en') || filename.toLowerCase().includes('english')) {
                     dataSource = './menu_en.js';
                     console.log('✅ Matched English menu - loading local file');
+                    showNotification('📄 Loading English menu data...', 'info', 3000);
                 } else if (filename.toLowerCase().includes('menu_ja') || filename.toLowerCase().includes('japanese')) {
                     dataSource = './menu_ja.js';
                     console.log('✅ Matched Japanese menu - loading local file');
+                    showNotification('📄 Loading Japanese menu data...', 'info', 3000);
                 } else if (filename.toLowerCase().includes('menu_zh') || filename.toLowerCase().includes('chinese')) {
                     dataSource = './menu_zh.js';
                     console.log('✅ Matched Chinese menu - loading local file');
+                    showNotification('📄 Loading Chinese menu data...', 'info', 3000);
                 } else {
                     dataSource = './menu_en.js';
                     console.log('⚠️ No match found, using default English menu - loading local file');
+                    showNotification('⚠️ No language match found, using English menu', 'warning', 5000);
                 }
                 
                 console.log('Loading from local file:', dataSource);
+                showNotification(`🌐 Fetching data from: ${dataSource}`, 'info', 3000);
                 
                 // Load the local file
                 const response = await fetch(dataSource);
@@ -1357,19 +1363,28 @@
                 console.log('Response ok:', response.ok);
                 
                 if (!response.ok) {
+                    const errorMsg = `❌ File not found: ${dataSource} (Status: ${response.status})`;
+                    console.error(errorMsg);
+                    showNotification(errorMsg, 'error', 5000);
                     throw new Error(`Local file not found: ${response.status}`);
                 }
+                
+                showNotification(`✅ File loaded successfully: ${dataSource}`, 'success', 3000);
                 
                 const scriptContent = await response.text();
                 console.log('Script content loaded, length:', scriptContent.length);
                 console.log('First 200 characters:', scriptContent.substring(0, 200));
+                showNotification(`📝 Script content loaded: ${scriptContent.length} characters`, 'info', 3000);
                 
                 // Execute the script to get the menuData
                 try {
                     eval(scriptContent);
                     console.log('Script executed successfully');
+                    showNotification('⚙️ Script executed successfully', 'success', 3000);
                 } catch (evalError) {
+                    const errorMsg = `❌ Script execution failed: ${evalError.message}`;
                     console.error('Error executing script:', evalError);
+                    showNotification(errorMsg, 'error', 5000);
                     throw new Error('Failed to execute script content');
                 }
                 
@@ -1487,15 +1502,17 @@
         }
 
         // Notification system
-        function showNotification(message, type = 'success') {
+        function showNotification(message, type = 'success', duration = 5000) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
             notification.className = `notification ${type}`;
             notification.classList.add('show');
             
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            
             setTimeout(() => {
                 notification.classList.remove('show');
-            }, 3000);
+            }, duration);
         }
 
         // Loading overlay
