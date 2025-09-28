@@ -304,6 +304,11 @@
             font-weight: 700;
             color: var(--deep-navy);
             margin-bottom: 16px;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .results-header p {
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
 
         .dish-card {
@@ -1126,8 +1131,8 @@
     <section class="menu-results hidden" id="menuResults">
         <div class="container">
             <div class="results-header">
-                <h2>Menu Translations</h2>
-                <p>Original text on the left, translated text on the right</p>
+                <h2 id="menuTranslationsTitle">Menu Translations</h2>
+                <p id="menuTranslationsDescription">Original text on the left, translated text on the right</p>
             </div>
             
             <div id="dishesContainer">
@@ -1521,8 +1526,8 @@
         // Language mapping
         const languageMap = {
             'en': { name: 'English', flag: '🇺🇸', key: 'english', original: 'Original' },
-            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: 'Original' },
-            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: 'Original' }
+            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: '原文' },
+            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: '原文' }
         };
 
         // Translation functions
@@ -1557,7 +1562,9 @@
                     'healthTip1': 'This is a hearty dish perfect for special occasions.',
                     'healthTip2': 'A well-balanced meal with good nutritional value.',
                     'healthTip3': 'A light and healthy option for everyday dining.',
-                    'disclaimer': 'Estimates only. Not medical advice.'
+                    'disclaimer': 'Estimates only. Not medical advice.',
+                    'menuTranslations': 'Menu Translations',
+                    'menuDescription': 'Original text on the left, translated text on the right'
                 },
                 'zh': {
                     'viewNutrition': '查看营养',
@@ -1588,7 +1595,9 @@
                     'healthTip1': '这是一道丰盛的菜肴，非常适合特殊场合。',
                     'healthTip2': '营养均衡的餐食，具有很好的营养价值。',
                     'healthTip3': '清淡健康的选择，适合日常用餐。',
-                    'disclaimer': '仅供参考。非医疗建议。'
+                    'disclaimer': '仅供参考。非医疗建议。',
+                    'menuTranslations': '菜单翻译',
+                    'menuDescription': '左侧原文，右侧翻译'
                 },
                 'ja': {
                     'viewNutrition': '栄養情報',
@@ -1619,7 +1628,9 @@
                     'healthTip1': '特別な機会に最適な、心のこもった料理です。',
                     'healthTip2': '栄養価の高い、バランスの取れた食事です。',
                     'healthTip3': '日常の食事に適した、軽くて健康的な選択肢です。',
-                    'disclaimer': '推定値のみ。医療アドバイスではありません。'
+                    'disclaimer': '推定値のみ。医療アドバイスではありません。',
+                    'menuTranslations': 'メニュー翻訳',
+                    'menuDescription': '左側原文、右側翻訳'
                 }
             };
             return translations[selectedLanguage]?.[key] || translations['en'][key];
@@ -1687,9 +1698,33 @@
             // Enable process button
             document.getElementById('processBtn').disabled = false;
             
+            // Update menu section header with animation
+            updateMenuHeader();
+            
             // Refresh the display if menu is already loaded
             if (menuData && menuData.dishes) {
                 displayMenuResults();
+            }
+        }
+
+        function updateMenuHeader() {
+            const titleElement = document.getElementById('menuTranslationsTitle');
+            const descriptionElement = document.getElementById('menuTranslationsDescription');
+            
+            if (titleElement && descriptionElement) {
+                // Add fade out animation
+                titleElement.style.opacity = '0';
+                descriptionElement.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Update content
+                    titleElement.textContent = getTranslation('menuTranslations');
+                    descriptionElement.textContent = getTranslation('menuDescription');
+                    
+                    // Add fade in animation
+                    titleElement.style.opacity = '1';
+                    descriptionElement.style.opacity = '1';
+                }, 200);
             }
         }
 
