@@ -1365,9 +1365,15 @@
                 showNotification(`🌐 Fetching data from: ${dataSource}`, 'info', 3000);
                 
                 // Load the local file
+                console.log('About to fetch:', dataSource);
+                console.log('Current URL:', window.location.href);
+                console.log('Full URL would be:', new URL(dataSource, window.location.href).href);
+                
                 const response = await fetch(dataSource);
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);
+                console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+                console.log('Response URL:', response.url);
                 
                 if (!response.ok) {
                     const errorMsg = `❌ File not found: ${dataSource} (Status: ${response.status})`;
@@ -1400,6 +1406,17 @@
                 try {
                     console.log('About to execute script content...');
                     console.log('Script content preview:', scriptContent.substring(0, 500));
+                    console.log('Script content ends with:', scriptContent.substring(scriptContent.length - 100));
+                    console.log('Script contains const polishMenuData:', scriptContent.includes('const polishMenuData'));
+                    console.log('Script contains const:', scriptContent.includes('const'));
+                    console.log('Script contains polishMenuData:', scriptContent.includes('polishMenuData'));
+                    
+                    // Clear any existing variables first
+                    delete window.polishMenuData;
+                    delete window.sichuanMenuData;
+                    delete window.menuData;
+                    console.log('Cleared existing variables');
+                    
                     eval(scriptContent);
                     console.log('Script executed successfully');
                     showNotification('⚙️ Script executed successfully', 'success', 3000);
@@ -1410,9 +1427,12 @@
                     console.log('- window.sichuanMenuData:', window.sichuanMenuData);
                     console.log('- window.menuData:', window.menuData);
                     console.log('- All window variables with "menu":', Object.keys(window).filter(key => key.toLowerCase().includes('menu')));
+                    console.log('- All window variables with "polish":', Object.keys(window).filter(key => key.toLowerCase().includes('polish')));
+                    console.log('- All window variables with "data":', Object.keys(window).filter(key => key.toLowerCase().includes('data')));
                 } catch (evalError) {
                     const errorMsg = `❌ Script execution failed: ${evalError.message}`;
                     console.error('Error executing script:', evalError);
+                    console.error('Error stack:', evalError.stack);
                     showNotification(errorMsg, 'error', 5000);
                     throw new Error('Failed to execute script content');
                 }
@@ -2103,6 +2123,76 @@
                 }
             } catch (error) {
                 console.error('Error testing JavaScript execution:', error);
+                return null;
+            }
+        }
+
+        // Test function to check file accessibility
+        async function testFileAccessibility() {
+            console.log('Testing file accessibility...');
+            const filesToTest = ['./menu_ja.js', './menu_en.js', './menu_zh.js', './complete-menu-data.js'];
+            
+            for (const file of filesToTest) {
+                try {
+                    console.log(`Testing ${file}...`);
+                    const response = await fetch(file);
+                    console.log(`${file} - Status: ${response.status}, OK: ${response.ok}`);
+                    
+                    if (response.ok) {
+                        const content = await response.text();
+                        console.log(`${file} - Content length: ${content.length}`);
+                        console.log(`${file} - First 100 chars: ${content.substring(0, 100)}`);
+                        console.log(`${file} - Contains polishMenuData: ${content.includes('polishMenuData')}`);
+                        console.log(`${file} - Contains const: ${content.includes('const')}`);
+                    } else {
+                        console.error(`${file} - Failed to load: ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error(`${file} - Error: ${error.message}`);
+                }
+            }
+        }
+
+        // Test function to manually execute menu_ja.js content
+        async function testMenuJaExecution() {
+            console.log('Testing menu_ja.js execution...');
+            try {
+                const response = await fetch('./menu_ja.js');
+                if (response.ok) {
+                    const content = await response.text();
+                    console.log('Content loaded, length:', content.length);
+                    console.log('First 200 chars:', content.substring(0, 200));
+                    console.log('Last 200 chars:', content.substring(content.length - 200));
+                    console.log('Contains const polishMenuData:', content.includes('const polishMenuData'));
+                    
+                    // Clear variables
+                    delete window.polishMenuData;
+                    delete window.sichuanMenuData;
+                    delete window.menuData;
+                    
+                    console.log('About to execute...');
+                    eval(content);
+                    console.log('Execution completed');
+                    
+                    console.log('Variables after execution:');
+                    console.log('polishMenuData:', window.polishMenuData);
+                    console.log('sichuanMenuData:', window.sichuanMenuData);
+                    console.log('menuData:', window.menuData);
+                    
+                    if (window.polishMenuData) {
+                        console.log('SUCCESS: polishMenuData found with', window.polishMenuData.dishes.length, 'dishes');
+                        return window.polishMenuData;
+                    } else {
+                        console.log('FAILURE: No polishMenuData found');
+                        console.log('All window variables:', Object.keys(window).filter(key => key.includes('Menu') || key.includes('menu') || key.includes('polish') || key.includes('data')));
+                        return null;
+                    }
+                } else {
+                    console.error('Failed to load menu_ja.js:', response.status);
+                    return null;
+                }
+            } catch (error) {
+                console.error('Error testing menu_ja.js execution:', error);
                 return null;
             }
         }
