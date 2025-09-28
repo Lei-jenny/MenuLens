@@ -1,4 +1,4 @@
-// Complete Japanese menu data with separated names and descriptions
+// Complete Japanese menu data with estimated nutritional values
 const polishMenuData = {
   "original": "Japanese",
   "dishes": [
@@ -15,11 +15,11 @@ const polishMenuData = {
         "alcohol"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 160,
+        "protein": 0,
+        "carbs": 25,
+        "fat": 0,
+        "sodium": 5,
         "allergens": "Alcohol"
       }
     },
@@ -36,11 +36,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 180,
+        "protein": 10,
+        "carbs": 28,
+        "fat": 3,
+        "sodium": 350,
         "allergens": "Fish"
       }
     },
@@ -57,11 +57,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 70,
+        "protein": 12,
+        "carbs": 4,
+        "fat": 1,
+        "sodium": 500,
         "allergens": "Fish, Soy"
       }
     },
@@ -78,11 +78,11 @@ const polishMenuData = {
         "vegetarian"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 110,
+        "protein": 3,
+        "carbs": 22,
+        "fat": 1,
+        "sodium": 300,
         "allergens": "None"
       }
     },
@@ -99,11 +99,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 140,
+        "protein": 9,
+        "carbs": 10,
+        "fat": 7,
+        "sodium": 650,
         "allergens": "Fish, Soy"
       }
     },
@@ -120,11 +120,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 90,
+        "protein": 15,
+        "carbs": 3,
+        "fat": 2,
+        "sodium": 250,
         "allergens": "Shellfish"
       }
     },
@@ -142,11 +142,11 @@ const polishMenuData = {
         "contains-egg"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 280,
+        "protein": 20,
+        "carbs": 8,
+        "fat": 18,
+        "sodium": 450,
         "allergens": "Beef, Egg, Soy"
       }
     },
@@ -163,11 +163,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 150,
+        "protein": 30,
+        "carbs": 0,
+        "fat": 2,
+        "sodium": 400,
         "allergens": "Shellfish"
       }
     },
@@ -184,11 +184,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 210,
+        "protein": 35,
+        "carbs": 6,
+        "fat": 4,
+        "sodium": 550,
         "allergens": "Shellfish"
       }
     },
@@ -206,11 +206,11 @@ const polishMenuData = {
         "contains-poultry"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 420,
+        "protein": 40,
+        "carbs": 12,
+        "fat": 22,
+        "sodium": 700,
         "allergens": "Fish, Soy"
       }
     },
@@ -227,11 +227,11 @@ const polishMenuData = {
         "contains-beef"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 550,
+        "protein": 45,
+        "carbs": 25,
+        "fat": 30,
+        "sodium": 600,
         "allergens": "Beef"
       }
     },
@@ -248,11 +248,11 @@ const polishMenuData = {
         "contains-seafood"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 350,
+        "protein": 40,
+        "carbs": 20,
+        "fat": 12,
+        "sodium": 900,
         "allergens": "Fish, Soy"
       }
     },
@@ -269,11 +269,11 @@ const polishMenuData = {
         "contains-gluten"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 280,
+        "protein": 8,
+        "carbs": 55,
+        "fat": 2,
+        "sodium": 850,
         "allergens": "Wheat, Soy"
       }
     },
@@ -290,11 +290,11 @@ const polishMenuData = {
         "vegetarian"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 40,
+        "protein": 1,
+        "carbs": 9,
+        "fat": 0,
+        "sodium": 700,
         "allergens": "None"
       }
     },
@@ -312,11 +312,11 @@ const polishMenuData = {
         "contains-dairy"
       ],
       "nutrition": {
-        "calories": null,
-        "protein": null,
-        "carbs": null,
-        "fat": null,
-        "sodium": null,
+        "calories": 380,
+        "protein": 6,
+        "carbs": 45,
+        "fat": 20,
+        "sodium": 80,
         "allergens": "Nuts, Dairy, Eggs"
       }
     }
