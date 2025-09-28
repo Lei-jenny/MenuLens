@@ -1,751 +1,160 @@
-// Complete WARKA PUB menu data with original Polish descriptions and translations
-const polishMenuData = {
-    original: "Polish",
-    dishes: [
-        // SHOTS
-        {
-            original: "MINIONS NEW",
-            english: "Minions Shot",
-            chinese: "小黄人鸡尾酒",
-            japanese: "ミニオンズショット",
-            description: "Wyborowa Vodka, likier bananowy, mleko, śmietana.",
-            description_en: "Wyborowa Vodka, banana liqueur, milk, sour cream.",
-            description_zh: "维波罗瓦伏特加、香蕉利口酒、牛奶、酸奶油。",
-            description_ja: "ヴィボロワウォッカ、バナナリキュール、牛乳、サワークリーム。",
-            tags: ["contains-dairy", "alcohol"],
-            nutrition: { calories: 180, protein: 2, carbs: 8, fat: 4, sodium: 15, allergens: "Dairy, Alcohol" }
-        },
-        {
-            original: "MAD BEAR",
-            english: "Mad Bear Shot",
-            chinese: "疯狂熊鸡尾酒",
-            japanese: "マッドベアショット",
-            description: "Śliwowica, tabasco, sok malinowy.",
-            description_en: "Slivovitz, tabasco, raspberry juice.",
-            description_zh: "李子白兰地、塔巴斯科辣椒酱、覆盆子汁。",
-            description_ja: "スリボヴィッツ、タバスコ、ラズベリージュース。",
-            tags: ["spicy", "alcohol"],
-            nutrition: { calories: 120, protein: 0, carbs: 12, fat: 0, sodium: 5, allergens: "Alcohol" }
-        },
-        {
-            original: "MAD DOG",
-            english: "Mad Dog Shot",
-            chinese: "疯狂狗鸡尾酒",
-            japanese: "マッドドッグショット",
-            description: "Wódka, Tabasco, sok malinowy.",
-            description_en: "Vodka, Tabasco, raspberry juice.",
-            description_zh: "伏特加、塔巴斯科辣椒酱、覆盆子汁。",
-            description_ja: "ウォッカ、タバスコ、ラズベリージュース。",
-            tags: ["spicy", "alcohol"],
-            nutrition: { calories: 110, protein: 0, carbs: 10, fat: 0, sodium: 3, allergens: "Alcohol" }
-        },
-        {
-            original: "PINEAPPLE",
-            english: "Pineapple Shot",
-            chinese: "菠萝鸡尾酒",
-            japanese: "パイナップルショット",
-            description: "Wódka Wyborowa, sos ananasowy, sos cytrynowy, syrop grenadine.",
-            description_en: "Wyborowa vodka, pineapple sauce, lemon sauce, grenadine syrup.",
-            description_zh: "维波罗瓦伏特加、菠萝酱、柠檬酱、石榴糖浆。",
-            description_ja: "ヴィボロワウォッカ、パイナップルソース、レモンソース、グレナデンシロップ。",
-            tags: ["alcohol"],
-            nutrition: { calories: 150, protein: 0, carbs: 15, fat: 0, sodium: 8, allergens: "Alcohol" }
-        },
-        {
-            original: "BANIECZKA",
-            english: "Banieczka Shot",
-            chinese: "班尼茨卡鸡尾酒",
-            japanese: "バニエチカショット",
-            description: "Wódka Wyborowa, sok cytrynowy, cukier, angostura.",
-            description_en: "Wyborowa vodka, lemon juice, sugar, angostura.",
-            description_zh: "维波罗瓦伏特加、柠檬汁、糖、安格斯特拉苦酒。",
-            description_ja: "ヴィボロワウォッカ、レモンジュース、砂糖、アンゴスチュラ。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 12, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "PASSIONSHOTS",
-            english: "Passion Shots",
-            chinese: "激情鸡尾酒",
-            japanese: "パッションショット",
-            description: "Havana Club 3, rum, maracuja puree, świeży sok cytrynowy, czerwony grejpfrut.",
-            description_en: "Havana Club 3, rum, maracuja puree, fresh lemon juice, red grapefruit.",
-            description_zh: "哈瓦那俱乐部3号朗姆酒、百香果泥、新鲜柠檬汁、红葡萄柚。",
-            description_ja: "ハバナクラブ3、ラム、マラクジャピューレ、フレッシュレモンジュース、レッドグレープフルーツ。",
-            tags: ["alcohol"],
-            nutrition: { calories: 160, protein: 0, carbs: 14, fat: 0, sodium: 4, allergens: "Alcohol" }
-        },
-        // KAMIKADZE
-        {
-            original: "BLUEBERRY NEW",
-            english: "Blueberry Kamikaze",
-            chinese: "蓝莓神风鸡尾酒",
-            japanese: "ブルーベリーカミカゼ",
-            description: "Kamikaze koktajl o smaku jagodowym.",
-            description_en: "Blueberry flavored kamikaze cocktail.",
-            description_zh: "蓝莓味神风鸡尾酒。",
-            description_ja: "ブルーベリー味のカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 140, protein: 0, carbs: 13, fat: 0, sodium: 3, allergens: "Alcohol" }
-        },
-        {
-            original: "PASSION FRUIT NEW",
-            english: "Passion Fruit Kamikaze",
-            chinese: "百香果神风鸡尾酒",
-            japanese: "パッションフルーツカミカゼ",
-            description: "Kamikaze koktajl o smaku marakui.",
-            description_en: "Passion fruit flavored kamikaze cocktail.",
-            description_zh: "百香果味神风鸡尾酒。",
-            description_ja: "パッションフルーツ味のカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 135, protein: 0, carbs: 12, fat: 0, sodium: 3, allergens: "Alcohol" }
-        },
-        {
-            original: "BLUE",
-            english: "Blue Kamikaze",
-            chinese: "蓝色神风鸡尾酒",
-            japanese: "ブルーカミカゼ",
-            description: "Niebieski kamikaze koktajl.",
-            description_en: "Blue colored kamikaze cocktail.",
-            description_zh: "蓝色神风鸡尾酒。",
-            description_ja: "ブルーのカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 11, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "STRAWBERRY",
-            english: "Strawberry Kamikaze",
-            chinese: "草莓神风鸡尾酒",
-            japanese: "ストロベリーカミカゼ",
-            description: "Kamikaze koktajl o smaku truskawkowym.",
-            description_en: "Strawberry flavored kamikaze cocktail.",
-            description_zh: "草莓味神风鸡尾酒。",
-            description_ja: "ストロベリー味のカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 135, protein: 0, carbs: 12, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "APPLE",
-            english: "Apple Kamikaze",
-            chinese: "苹果神风鸡尾酒",
-            japanese: "アップルカミカゼ",
-            description: "Kamikaze koktajl o smaku jabłkowym.",
-            description_en: "Apple flavored kamikaze cocktail.",
-            description_zh: "苹果味神风鸡尾酒。",
-            description_ja: "アップル味のカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 11, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "MANGO",
-            english: "Mango Kamikaze",
-            chinese: "芒果神风鸡尾酒",
-            japanese: "マンゴーカミカゼ",
-            description: "Kamikaze koktajl o smaku mango.",
-            description_en: "Mango flavored kamikaze cocktail.",
-            description_zh: "芒果味神风鸡尾酒。",
-            description_ja: "マンゴー味のカミカゼカクテル。",
-            tags: ["alcohol"],
-            nutrition: { calories: 140, protein: 0, carbs: 13, fat: 0, sodium: 3, allergens: "Alcohol" }
-        },
-        // PROSECCO
-        {
-            original: "PROSECCO",
-            english: "Prosecco",
-            chinese: "普罗塞克起泡酒",
-            japanese: "プロセッコ",
-            description: "Włoskie wino musujące.",
-            description_en: "Italian sparkling wine.",
-            description_zh: "意大利起泡酒。",
-            description_ja: "イタリアのスパークリングワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 80, protein: 0, carbs: 2, fat: 0, sodium: 1, allergens: "Alcohol" }
-        },
-        {
-            original: "PROSECCO DI VICI",
-            english: "Prosecco Di Vici",
-            chinese: "维西普罗塞克",
-            japanese: "プロセッコディヴィチ",
-            description: "Premiumowe włoskie wino musujące.",
-            description_en: "Premium Italian sparkling wine.",
-            description_zh: "优质意大利起泡酒。",
-            description_ja: "プレミアムイタリアスパークリングワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 85, protein: 0, carbs: 2, fat: 0, sodium: 1, allergens: "Alcohol" }
-        },
-        {
-            original: "PROSECCO FRIZZANTE BOTTER",
-            english: "Prosecco Frizzante Botter",
-            chinese: "博特普罗塞克起泡酒",
-            japanese: "プロセッコフリッツァンテボッター",
-            description: "Włoskie wino frizzante musujące.",
-            description_en: "Italian frizzante sparkling wine.",
-            description_zh: "意大利微起泡酒。",
-            description_ja: "イタリアのフリッツァンテスパークリングワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 82, protein: 0, carbs: 2, fat: 0, sodium: 1, allergens: "Alcohol" }
-        },
-        // WHITE WINES
-        {
-            original: "PINOT GRIGIO",
-            english: "Pinot Grigio",
-            chinese: "灰皮诺白葡萄酒",
-            japanese: "ピノグリージョ",
-            description: "Włoskie białe wino.",
-            description_en: "Italian white wine.",
-            description_zh: "意大利白葡萄酒。",
-            description_ja: "イタリアの白ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 120, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "SAUVIGNON BLANC",
-            english: "Sauvignon Blanc",
-            chinese: "长相思白葡萄酒",
-            japanese: "ソーヴィニヨンブラン",
-            description: "Chilijskie białe wino.",
-            description_en: "Chilean white wine.",
-            description_zh: "智利白葡萄酒。",
-            description_ja: "チリの白ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 125, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "CHARDONNAY",
-            english: "Chardonnay",
-            chinese: "霞多丽白葡萄酒",
-            japanese: "シャルドネ",
-            description: "Południowoafrykańskie białe wino.",
-            description_en: "South African white wine.",
-            description_zh: "南非白葡萄酒。",
-            description_ja: "南アフリカの白ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "RIESLING",
-            english: "Riesling",
-            chinese: "雷司令白葡萄酒",
-            japanese: "リースリング",
-            description: "Niemieckie białe wino.",
-            description_en: "German white wine.",
-            description_zh: "德国白葡萄酒。",
-            description_ja: "ドイツの白ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 115, protein: 0, carbs: 4, fat: 0, sodium: 1, allergens: "Alcohol" }
-        },
-        {
-            original: "MULTI-STRAIN",
-            english: "Multi-Strain White",
-            chinese: "多品种白葡萄酒",
-            japanese: "マルチストレイン白",
-            description: "Francuska mieszanka białych win.",
-            description_en: "French white wine blend.",
-            description_zh: "法国白葡萄酒混酿。",
-            description_ja: "フランスの白ワインブレンド。",
-            tags: ["alcohol"],
-            nutrition: { calories: 120, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        // RED WINES
-        {
-            original: "MULTI-STRAIN RED",
-            english: "Multi-Strain Red",
-            chinese: "多品种红葡萄酒",
-            japanese: "マルチストレイン赤",
-            description: "Włoska mieszanka czerwonych win.",
-            description_en: "Italian red wine blend.",
-            description_zh: "意大利红葡萄酒混酿。",
-            description_ja: "イタリアの赤ワインブレンド。",
-            tags: ["alcohol"],
-            nutrition: { calories: 125, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "PRIMITIVO",
-            english: "Primitivo",
-            chinese: "普里米蒂沃红葡萄酒",
-            japanese: "プリミティーヴォ",
-            description: "Włoskie czerwone wino.",
-            description_en: "Italian red wine.",
-            description_zh: "意大利红葡萄酒。",
-            description_ja: "イタリアの赤ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "DIODORO PRIMITIVO",
-            english: "Diodoro Primitivo",
-            chinese: "迪奥多罗普里米蒂沃",
-            japanese: "ディオドロプリミティーヴォ",
-            description: "Premiumowe włoskie czerwone wino.",
-            description_en: "Premium Italian red wine.",
-            description_zh: "优质意大利红葡萄酒。",
-            description_ja: "プレミアムイタリア赤ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 135, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "CARMENERE",
-            english: "Carmenere",
-            chinese: "佳美娜红葡萄酒",
-            japanese: "カルメネール",
-            description: "Chilijskie czerwone wino.",
-            description_en: "Chilean red wine.",
-            description_zh: "智利红葡萄酒。",
-            description_ja: "チリの赤ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 125, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "MERLOT",
-            english: "Merlot",
-            chinese: "梅洛红葡萄酒",
-            japanese: "メルロー",
-            description: "Urugwajskie czerwone wino.",
-            description_en: "Uruguayan red wine.",
-            description_zh: "乌拉圭红葡萄酒。",
-            description_ja: "ウルグアイの赤ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 130, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        {
-            original: "SHIRAZ",
-            english: "Shiraz",
-            chinese: "西拉红葡萄酒",
-            japanese: "シラーズ",
-            description: "Australijskie czerwone wino.",
-            description_en: "Australian red wine.",
-            description_zh: "澳大利亚红葡萄酒。",
-            description_ja: "オーストラリアの赤ワイン。",
-            tags: ["alcohol"],
-            nutrition: { calories: 135, protein: 0, carbs: 3, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        // FRENCH FRIES
-        {
-            original: "BUNCH OF SWEET POTATOES",
-            english: "Sweet Potato Fries",
-            chinese: "红薯条",
-            japanese: "スイートポテトフライ",
-            description: "Frytki z batatów z sosem kimchi majonezowym.",
-            description_en: "Sweet potato fries with kimchi mayo sauce.",
-            description_zh: "红薯条配泡菜蛋黄酱。",
-            description_ja: "スイートポテトフライ、キムチマヨネーズソース添え。",
-            tags: ["vegetarian", "spicy"],
-            nutrition: { calories: 320, protein: 4, carbs: 45, fat: 12, sodium: 480, allergens: "None" }
-        },
-        {
-            original: "BELGIAN FRIES CLASSIC",
-            english: "Classic Belgian Fries",
-            chinese: "经典比利时薯条",
-            japanese: "クラシックベルギーフライ",
-            description: "Tradycyjne belgijskie frytki z oryginalnym keczupem Heinz.",
-            description_en: "Traditional Belgian fries with original Heinz ketchup.",
-            description_zh: "传统比利时薯条配原味亨氏番茄酱。",
-            description_ja: "伝統的なベルギーフライ、オリジナルハインツケチャップ添え。",
-            tags: ["vegetarian"],
-            nutrition: { calories: 380, protein: 5, carbs: 48, fat: 18, sodium: 520, allergens: "None" }
-        },
-        {
-            original: "BELGIAN FRIES WITH CHEESE",
-            english: "Belgian Fries with Cheese",
-            chinese: "奶酪比利时薯条",
-            japanese: "チーズベルギーフライ",
-            description: "Belgijskie frytki z pieczonym serem i oryginalnym keczupem Heinz.",
-            description_en: "Belgian fries with baked cheese and original Heinz ketchup.",
-            description_zh: "比利时薯条配烤奶酪和原味亨氏番茄酱。",
-            description_ja: "ベルギーフライ、焼きチーズとオリジナルハインツケチャップ添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 450, protein: 12, carbs: 48, fat: 24, sodium: 680, allergens: "Dairy" }
-        },
-        // COLD BEVERAGES
-        {
-            original: "FRESH FRUIT JUICE",
-            english: "Fresh Fruit Juice",
-            chinese: "新鲜果汁",
-            japanese: "フレッシュフルーツジュース",
-            description: "Świeżo wyciskany sok owocowy - pomarańczowy, grejpfrutowy lub mieszany.",
-            description_en: "Freshly squeezed fruit juice - orange, grapefruit, or mixed.",
-            description_zh: "鲜榨果汁 - 橙子、葡萄柚或混合。",
-            description_ja: "フレッシュ絞りフルーツジュース - オレンジ、グレープフルーツ、またはミックス。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 120, protein: 2, carbs: 28, fat: 0, sodium: 5, allergens: "None" }
-        },
-        {
-            original: "LEMONADE",
-            english: "Lemonade",
-            chinese: "柠檬水",
-            japanese: "レモネード",
-            description: "Świeża lemoniada - cytrynowa lub tropikalna.",
-            description_en: "Fresh lemonade - lemon or tropical flavor.",
-            description_zh: "新鲜柠檬水 - 柠檬或热带风味。",
-            description_ja: "フレッシュレモネード - レモンまたはトロピカルフレーバー。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 80, protein: 0, carbs: 20, fat: 0, sodium: 3, allergens: "None" }
-        },
-        {
-            original: "COCA-COLA",
-            english: "Coca-Cola",
-            chinese: "可口可乐",
-            japanese: "コカ・コーラ",
-            description: "Klasyczny napój Coca-Cola.",
-            description_en: "Classic Coca-Cola soft drink.",
-            description_zh: "经典可口可乐软饮。",
-            description_ja: "クラシックコカ・コーラソフトドリンク。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 140, protein: 0, carbs: 35, fat: 0, sodium: 10, allergens: "None" }
-        },
-        {
-            original: "CAPPY JUICE",
-            english: "Cappy Juice",
-            chinese: "卡皮果汁",
-            japanese: "キャッピージュース",
-            description: "Sok owocowy - pomarańczowy, jabłkowy, porzeczkowy, pomidorowy, grejpfrutowy lub multiwitamina.",
-            description_en: "Fruit juice - orange, apple, currant, tomato, grapefruit, or multivitamin.",
-            description_zh: "果汁 - 橙子、苹果、醋栗、番茄、葡萄柚或多维。",
-            description_ja: "フルーツジュース - オレンジ、りんご、カシス、トマト、グレープフルーツ、またはマルチビタミン。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 110, protein: 1, carbs: 26, fat: 0, sodium: 8, allergens: "None" }
-        },
-        {
-            original: "FUZETEA",
-            english: "Fuzetea",
-            chinese: "福泽茶",
-            japanese: "フゼティー",
-            description: "Mrożona herbata - cytrynowa lub brzoskwiniowa.",
-            description_en: "Iced tea - lemon or peach flavor.",
-            description_zh: "冰茶 - 柠檬或桃子味。",
-            description_ja: "アイスティー - レモンまたはピーチフレーバー。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 90, protein: 0, carbs: 22, fat: 0, sodium: 5, allergens: "None" }
-        },
-        {
-            original: "CISOWIANKA PERLAGE",
-            english: "Cisowianka Perlage",
-            chinese: "西索维安卡气泡水",
-            japanese: "チソヴィアンカペルラージュ",
-            description: "Musująca woda mineralna.",
-            description_en: "Sparkling mineral water.",
-            description_zh: "气泡矿泉水。",
-            description_ja: "スパークリングミネラルウォーター。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, sodium: 2, allergens: "None" }
-        },
-        {
-            original: "MINERAL WATER",
-            english: "Mineral Water",
-            chinese: "矿泉水",
-            japanese: "ミネラルウォーター",
-            description: "Musująca lub niegazowana woda mineralna.",
-            description_en: "Sparkling or non-sparkling mineral water.",
-            description_zh: "气泡或非气泡矿泉水。",
-            description_ja: "スパークリングまたはノンガスミネラルウォーター。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 0, protein: 0, carbs: 0, fat: 0, sodium: 1, allergens: "None" }
-        },
-        {
-            original: "BURN ENERGY DRINK",
-            english: "Burn Energy Drink",
-            chinese: "燃烧能量饮料",
-            japanese: "バーンエナジードリンク",
-            description: "Napój energetyczny z kofeiną i tauryną.",
-            description_en: "Energy drink with caffeine and taurine.",
-            description_zh: "含咖啡因和牛磺酸的能量饮料。",
-            description_ja: "カフェインとタウリン入りエナジードリンク。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 160, protein: 0, carbs: 40, fat: 0, sodium: 15, allergens: "None" }
-        },
-        {
-            original: "RED BULL",
-            english: "Red Bull",
-            chinese: "红牛",
-            japanese: "レッドブル",
-            description: "Napój energetyczny z kofeiną i tauryną.",
-            description_en: "Energy drink with caffeine and taurine.",
-            description_zh: "含咖啡因和牛磺酸的能量饮料。",
-            description_ja: "カフェインとタウリン入りエナジードリンク。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 110, protein: 1, carbs: 27, fat: 0, sodium: 10, allergens: "None" }
-        },
-        // DESSERTS
-        {
-            original: "CHOCOLATE MOUSSE WITH CHIA SEEDS NEW",
-            english: "Chocolate Mousse with Chia Seeds",
-            chinese: "奇亚籽巧克力慕斯",
-            japanese: "チアシードチョコレートムース",
-            description: "Kremowe czekoladowe mus z pożywnymi nasionami chia.",
-            description_en: "Creamy chocolate mousse with nutritious chia seeds.",
-            description_zh: "奶油巧克力慕斯配营养奇亚籽。",
-            description_ja: "クリーミーなチョコレートムース、栄養豊富なチアシード添え。",
-            tags: ["vegetarian", "contains-dairy"],
-            nutrition: { calories: 280, protein: 8, carbs: 32, fat: 14, sodium: 45, allergens: "Dairy" }
-        },
-        {
-            original: "TAPIOCA PUDDING NEW",
-            english: "Tapioca Pudding",
-            chinese: "木薯布丁",
-            japanese: "タピオカプディング",
-            description: "Kulki tapioki w mleku kokosowym z sosem mango i świeżymi owocami.",
-            description_en: "Tapioca balls in coconut milk with mango sauce and fresh fruits.",
-            description_zh: "椰奶木薯球配芒果酱和新鲜水果。",
-            description_ja: "ココナッツミルクのタピオカボール、マンゴーソースとフレッシュフルーツ添え。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 220, protein: 3, carbs: 45, fat: 4, sodium: 25, allergens: "None" }
-        },
-        {
-            original: "BROWNIE",
-            english: "Brownie",
-            chinese: "布朗尼蛋糕",
-            japanese: "ブラウニー",
-            description: "Ciasto czekoladowe z karmelem miso i gałką lodów.",
-            description_en: "Chocolate cake with miso caramel and a scoop of ice cream.",
-            description_zh: "巧克力蛋糕配味噌焦糖和一勺冰淇淋。",
-            description_ja: "チョコレートケーキ、味噌キャラメルとアイスクリーム一球添え。",
-            tags: ["contains-dairy", "contains-eggs"],
-            nutrition: { calories: 420, protein: 6, carbs: 58, fat: 18, sodium: 180, allergens: "Dairy, Eggs, Wheat" }
-        },
-        // COFFEE & TEA
-        {
-            original: "CAFFE LATTE",
-            english: "Caffe Latte",
-            chinese: "拿铁咖啡",
-            japanese: "カフェラテ",
-            description: "Kawa espresso z mlekiem na parze.",
-            description_en: "Espresso coffee with steamed milk.",
-            description_zh: "浓缩咖啡配蒸牛奶。",
-            description_ja: "エスプレッソコーヒー、スチームミルク添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 120, protein: 6, carbs: 8, fat: 4, sodium: 60, allergens: "Dairy" }
-        },
-        {
-            original: "CAPPUCCINO",
-            english: "Cappuccino",
-            chinese: "卡布奇诺",
-            japanese: "カプチーノ",
-            description: "Klasyczne włoskie espresso z pianką mleczną.",
-            description_en: "Classic Italian espresso with milk foam.",
-            description_zh: "经典意大利浓缩咖啡配奶泡。",
-            description_ja: "クラシックイタリアンエスプレッソ、ミルクフォーム添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 80, protein: 4, carbs: 6, fat: 3, sodium: 40, allergens: "Dairy" }
-        },
-        {
-            original: "DOPPIO",
-            english: "Doppio",
-            chinese: "双份浓缩咖啡",
-            japanese: "ドッピオ",
-            description: "Podwójne espresso.",
-            description_en: "Double espresso shot.",
-            description_zh: "双份浓缩咖啡。",
-            description_ja: "ダブルエスプレッソショット。",
-            tags: ["vegan"],
-            nutrition: { calories: 10, protein: 1, carbs: 1, fat: 0, sodium: 5, allergens: "None" }
-        },
-        {
-            original: "ESPRESSO",
-            english: "Espresso",
-            chinese: "浓缩咖啡",
-            japanese: "エスプレッソ",
-            description: "Klasyczne włoskie espresso.",
-            description_en: "Classic Italian espresso.",
-            description_zh: "经典意大利浓缩咖啡。",
-            description_ja: "クラシックイタリアンエスプレッソ。",
-            tags: ["vegan"],
-            nutrition: { calories: 5, protein: 0, carbs: 1, fat: 0, sodium: 2, allergens: "None" }
-        },
-        {
-            original: "BLACK COFFEE",
-            english: "Black Coffee",
-            chinese: "黑咖啡",
-            japanese: "ブラックコーヒー",
-            description: "Filiżanka czarnej kawy.",
-            description_en: "Cup of black coffee.",
-            description_zh: "一杯黑咖啡。",
-            description_ja: "ブラックコーヒー一杯。",
-            tags: ["vegan"],
-            nutrition: { calories: 5, protein: 0, carbs: 1, fat: 0, sodium: 2, allergens: "None" }
-        },
-        {
-            original: "WHITE COFFEE",
-            english: "White Coffee",
-            chinese: "白咖啡",
-            japanese: "ホワイトコーヒー",
-            description: "Kawa z gorącym mlekiem.",
-            description_en: "Coffee with hot milk.",
-            description_zh: "咖啡配热牛奶。",
-            description_ja: "ホットミルク入りコーヒー。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 60, protein: 3, carbs: 4, fat: 2, sodium: 30, allergens: "Dairy" }
-        },
-        {
-            original: "TEA BLACK",
-            english: "Black Tea",
-            chinese: "红茶",
-            japanese: "紅茶",
-            description: "Klasyczna czarna herbata.",
-            description_en: "Classic black tea.",
-            description_zh: "经典红茶。",
-            description_ja: "クラシック紅茶。",
-            tags: ["vegan"],
-            nutrition: { calories: 2, protein: 0, carbs: 0, fat: 0, sodium: 1, allergens: "None" }
-        },
-        {
-            original: "FRUIT TEA",
-            english: "Fruit Tea",
-            chinese: "果茶",
-            japanese: "フルーツティー",
-            description: "Herbata owocowa - malinowa, miętowa, cynamonowa, Earl Gray, biała, zielona lub Yerba Mate.",
-            description_en: "Fruit tea - raspberry, mint, cinnamon, Earl Gray, white, green, or Yerba Mate.",
-            description_zh: "果茶 - 覆盆子、薄荷、肉桂、伯爵茶、白茶、绿茶或马黛茶。",
-            description_ja: "フルーツティー - ラズベリー、ミント、シナモン、アールグレイ、白、緑、またはイエルバマテ。",
-            tags: ["vegan"],
-            nutrition: { calories: 5, protein: 0, carbs: 1, fat: 0, sodium: 2, allergens: "None" }
-        },
-        {
-            original: "FALL/WINTER TEA NEW",
-            english: "Fall/Winter Tea",
-            chinese: "秋冬茶",
-            japanese: "秋冬季茶",
-            description: "Herbata z pomarańczami, oryginalną mieszanką przypraw i miodem.",
-            description_en: "Tea with oranges, original spice mix, and honey.",
-            description_zh: "茶配橙子、原味香料混合物和蜂蜜。",
-            description_ja: "オレンジ、オリジナルスパイスミックス、はちみつ入りティー。",
-            tags: ["vegetarian"],
-            nutrition: { calories: 45, protein: 0, carbs: 11, fat: 0, sodium: 3, allergens: "None" }
-        },
-        {
-            original: "RASPBERRY WINTER TEA NEW",
-            english: "Raspberry Winter Tea",
-            chinese: "覆盆子冬季茶",
-            japanese: "ラズベリーウィンターティー",
-            description: "Herbata z grejpfrutem, czerwoną papryką, rozmarynem i malinami.",
-            description_en: "Tea with grapefruit, red pepper, rosemary, and raspberries.",
-            description_zh: "茶配葡萄柚、红辣椒、迷迭香和覆盆子。",
-            description_ja: "グレープフルーツ、赤唐辛子、ローズマリー、ラズベリー入りティー。",
-            tags: ["vegetarian"],
-            nutrition: { calories: 40, protein: 0, carbs: 10, fat: 0, sodium: 2, allergens: "None" }
-        },
-        {
-            original: "TEA WITH CHERRY VODKA NEW",
-            english: "Tea with Cherry Vodka",
-            chinese: "樱桃伏特加茶",
-            japanese: "チェリーヴォッカティー",
-            description: "Herbata z domową wiśniową wódką i wiśniami.",
-            description_en: "Tea with homemade cherry vodka and cherries.",
-            description_zh: "茶配自制樱桃伏特加和樱桃。",
-            description_ja: "自家製チェリーヴォッカとチェリー入りティー。",
-            tags: ["alcohol"],
-            nutrition: { calories: 80, protein: 0, carbs: 8, fat: 0, sodium: 2, allergens: "Alcohol" }
-        },
-        // SALADS
-        {
-            original: "CAESAR BESTSELLER",
-            english: "Caesar Salad",
-            chinese: "凯撒沙拉",
-            japanese: "シーザーサラダ",
-            description: "Grillowana sałata rzymska, boczek, ser parmezan, sos Caesar i grzanki.",
-            description_en: "Grilled romaine lettuce, bacon, Parmesan cheese, Caesar dressing, and croutons.",
-            description_zh: "烤罗马生菜、培根、帕尔马干酪、凯撒酱和面包丁。",
-            description_ja: "グリルロメインレタス、ベーコン、パルメザンチーズ、シーザードレッシング、クルトン添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 420, protein: 22, carbs: 18, fat: 28, sodium: 850, allergens: "Dairy, Wheat" }
-        },
-        {
-            original: "CALIFORNIA NEW",
-            english: "California Salad",
-            chinese: "加利福尼亚沙拉",
-            japanese: "カリフォルニアサラダ",
-            description: "Grillowany kurczak z mieszanymi zieleninami, świeżym ananasem, pomidorkami koktajlowymi, ogórkiem, jajkami, prażonymi nasionami słonecznika i kiełkami w sosie ananasowym.",
-            description_en: "Grilled chicken with mixed greens, fresh pineapple, cherry tomatoes, cucumber, eggs, roasted sunflower seeds and sprouts in pineapple sauce.",
-            description_zh: "烤鸡配混合蔬菜、新鲜菠萝、樱桃番茄、黄瓜、鸡蛋、烤葵花籽和豆芽，配菠萝酱。",
-            description_ja: "グリルチキン、ミックスグリーン、フレッシュパイナップル、チェリートマト、キュウリ、卵、ローストひまわりの種、スプラウト、パイナップルソース添え。",
-            tags: ["contains-eggs"],
-            nutrition: { calories: 380, protein: 28, carbs: 25, fat: 18, sodium: 420, allergens: "Eggs" }
-        },
-        {
-            original: "CAMEMBERT NEW",
-            english: "Camembert Salad",
-            chinese: "卡门贝尔奶酪沙拉",
-            japanese: "カマンベールサラダ",
-            description: "Ser Camembert w panierce panko z mieszanymi zieleninami, żurawiną, migdałami, zieloną fasolką i sosem winegret.",
-            description_en: "Panko-breaded Camembert cheese with mixed greens, cranberry, almonds, green beans, and vinaigrette dressing.",
-            description_zh: "面包屑卡门贝尔奶酪配混合蔬菜、蔓越莓、杏仁、青豆和油醋汁。",
-            description_ja: "パン粉のカマンベールチーズ、ミックスグリーン、クランベリー、アーモンド、インゲン、ヴィネグレットドレッシング添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 450, protein: 18, carbs: 22, fat: 32, sodium: 380, allergens: "Dairy, Wheat" }
-        },
-        // SOUPS
-        {
-            original: "TOMATO SOUP",
-            english: "Tomato Soup",
-            chinese: "番茄汤",
-            japanese: "トマトスープ",
-            description: "Zupa zrobiona z malinowych pomidorów i świeżej bazylii.",
-            description_en: "Soup made with raspberry tomatoes and fresh basil.",
-            description_zh: "用覆盆子番茄和新鲜罗勒制作的汤。",
-            description_ja: "ラズベリートマトとフレッシュバジルで作ったスープ。",
-            tags: ["vegetarian", "vegan"],
-            nutrition: { calories: 120, protein: 4, carbs: 18, fat: 3, sodium: 480, allergens: "None" }
-        },
-        {
-            original: "ŻUREK BESTSELLER",
-            english: "Traditional Polish Sour Rye Soup",
-            chinese: "传统波兰酸黑麦汤",
-            japanese: "伝統的なポーランド酸ライ麦スープ",
-            description: "Tradycyjny polski żurek z białą i wędzoną kiełbasą, podawany z jajkiem na twardo.",
-            description_en: "Traditional Polish sour rye soup with white and smoked sausage, served with hard-boiled egg.",
-            description_zh: "传统波兰酸黑麦汤配白香肠和熏香肠，配水煮蛋。",
-            description_ja: "伝統的なポーランド酸ライ麦スープ、白ソーセージと燻製ソーセージ、ゆで卵添え。",
-            tags: ["contains-pork", "contains-eggs"],
-            nutrition: { calories: 320, protein: 18, carbs: 25, fat: 15, sodium: 1200, allergens: "Pork, Wheat, Eggs" }
-        },
-        // BOWLS OF NOODLES
-        {
-            original: "SPAGHETTI BOLOGNESE NEW",
-            english: "Spaghetti Bolognese",
-            chinese: "意大利肉酱面",
-            japanese: "スパゲッティボロネーゼ",
-            description: "Sos mięsny z wieprzowiny i wołowiny z pomidorami, czosnkiem i serem parmezanem na spaghetti.",
-            description_en: "Pork and beef meat sauce with tomatoes, garlic, and Parmesan cheese over spaghetti.",
-            description_zh: "猪肉牛肉酱配番茄、大蒜和帕尔马干酪，配意大利面。",
-            description_ja: "豚肉と牛肉のミートソース、トマト、ニンニク、パルメザンチーズ、スパゲッティ添え。",
-            tags: ["contains-pork", "contains-beef", "contains-dairy"],
-            nutrition: { calories: 580, protein: 28, carbs: 65, fat: 18, sodium: 920, allergens: "Pork, Beef, Wheat, Dairy" }
-        },
-        {
-            original: "PENNE WITH CHICKEN BESTSELLER",
-            english: "Penne with Chicken",
-            chinese: "鸡肉通心粉",
-            japanese: "ペンネとチキン",
-            description: "Makaron penne z kurczakiem i brokułami w sosie śmietanowym, posypany serem parmezanem.",
-            description_en: "Penne pasta with chicken and broccoli in cream sauce, topped with Parmesan cheese.",
-            description_zh: "通心粉配鸡肉和西兰花奶油酱，撒帕尔马干酪。",
-            description_ja: "ペンネパスタ、チキンとブロッコリー、クリームソース、パルメザンチーズ添え。",
-            tags: ["contains-dairy"],
-            nutrition: { calories: 520, protein: 32, carbs: 55, fat: 18, sodium: 780, allergens: "Dairy, Wheat" }
-        },
-        {
-            original: "TAGLIATELLE WITH TENDERLOIN AND PORCINI",
-            english: "Tagliatelle with Tenderloin and Porcini",
-            chinese: "牛里脊牛肝菌意面",
-            japanese: "テンダーロインとポルチーニのタリアテッレ",
-            description: "Polędwica wieprzowa z grzybami borowikami w sosie śmietanowym, podawana na makaronie tagliatelle z serem parmezanem.",
-            description_en: "Pork tenderloin with porcini mushrooms in cream sauce, served over tagliatelle pasta with Parmesan cheese.",
-            description_zh: "猪里脊配牛肝菌奶油酱，配意大利宽面撒帕尔马干酪。",
-            description_ja: "ポークテンダーロイン、ポルチーニきのこ、クリームソース、タリアテッレパスタ、パルメザンチーズ添え。",
-            tags: ["contains-pork", "contains-dairy"],
-            nutrition: { calories: 680, protein: 38, carbs: 58, fat: 28, sodium: 850, allergens: "Pork, Wheat, Dairy" }
-        },
-        {
-            original: "LINGUINE",
-            english: "Linguine with Seafood",
-            chinese: "海鲜扁面",
-            japanese: "シーフードリングイネ",
-            description: "Linguine z owocami morza z krewetkami, kalmarami, małżami, pomidorkami koktajlowymi, sosem śmietanowym, czosnkiem i serem parmezanem.",
-            description_en: "Seafood linguine with shrimps, calamari, mussels, cocktail tomatoes, cream sauce, garlic, and Parmesan cheese.",
-            description_zh: "海鲜扁面配虾、鱿鱼、贻贝、樱桃番茄、奶油酱、大蒜和帕尔马干酪。",
-            description_ja: "シーフードリングイネ、エビ、イカ、ムール貝、チェリートマト、クリームソース、ニンニク、パルメザンチーズ添え。",
-            tags: ["contains-seafood", "contains-dairy"],
-            nutrition: { calories: 620, protein: 35, carbs: 52, fat: 22, sodium: 980, allergens: "Seafood, Wheat, Dairy" }
-        }
-    ]
+// Complete Sichuan menu data with estimated nutritional values
+const sichuanMenuData = {
+  "original": "Sichuan",
+  "dishes": [
+    {
+      "original": "水煮鱼片",
+      "english": "Poached Sliced Fish in Spicy and Hot Sauce",
+      "chinese": "水煮鱼片",
+      "japanese": "四川風魚の唐辛子煮込み",
+      "description": "",
+      "description_en": "Tender fish fillets poached in a sizzling broth of chili oil and Sichuan peppercorns, served over vegetables.",
+      "description_zh": "嫩滑的鱼片在辣椒油和花椒的热汤中煮熟，配以蔬菜。",
+      "description_ja": "柔らかい魚の切り身を、唐辛子オイルと花椒の風味豊かなスープで煮込み、野菜の上に乗せて提供します。",
+      "tags": [
+        "spicy",
+        "contains-seafood"
+      ],
+      "nutrition": {
+        "calories": 1250,
+        "protein": 80,
+        "carbs": 25,
+        "fat": 95,
+        "sodium": 3500,
+        "allergens": "Fish, Soy, Wheat"
+      }
+    },
+    {
+      "original": "泡椒炒双脆",
+      "english": "Stir-fried OX Aorta and Goose Intestine with Pickled Chili",
+      "chinese": "泡椒炒双脆",
+      "japanese": "牛の大動脈とガチョウの腸の泡椒炒め",
+      "description": "",
+      "description_en": "A unique, crunchy texture combination of ox aorta and goose intestine, stir-fried with spicy pickled chilies.",
+      "description_zh": "牛主动脉和鹅肠的双重脆爽口感，搭配泡椒爆炒而成。",
+      "description_ja": "牛の大動脈とガチョウの腸、二つのコリコリした食感をピリ辛の泡椒（唐辛子の漬物）で炒めました。",
+      "tags": [
+        "spicy",
+        "offal"
+      ],
+      "nutrition": {
+        "calories": 850,
+        "protein": 60,
+        "carbs": 15,
+        "fat": 65,
+        "sodium": 2800,
+        "allergens": "Soy, Wheat"
+      }
+    },
+    {
+      "original": "山城毛血旺",
+      "english": "Poached Blood Curd with Ham and Vegetable in Chongqing Style",
+      "chinese": "山城毛血旺",
+      "japanese": "重慶風ホルモンと鴨の血の煮込み",
+      "description": "",
+      "description_en": "A classic Chongqing stew featuring duck blood curd, tripe, ham, and various offal in a fiery, numbing broth.",
+      "description_zh": "经典的重庆菜，以鸭血、毛肚、火腿和多种杂碎在麻辣汤中炖煮而成。",
+      "description_ja": "鴨の血、ハチノス、ハム、様々なホルモンを麻辣スープで煮込んだ重慶の代表的な煮込み料理。",
+      "tags": [
+        "spicy",
+        "offal",
+        "contains-pork"
+      ],
+      "nutrition": {
+        "calories": 1400,
+        "protein": 90,
+        "carbs": 20,
+        "fat": 110,
+        "sodium": 4500,
+        "allergens": "Soy, Wheat"
+      }
+    },
+    {
+      "original": "金钱菇红烧肉",
+      "english": "Braised Pork Belly with Mushroom",
+      "chinese": "金钱菇红烧肉",
+      "japanese": "椎茸と豚バラ肉の醤油煮込み",
+      "description": "",
+      "description_en": "Rich and succulent pork belly, slow-braised in a sweet and savory soy sauce with shiitake mushrooms.",
+      "description_zh": "肥美多汁的五花肉与香菇一同在甜咸的酱油中慢炖而成。",
+      "description_ja": "豊かでジューシーな豚バラ肉を、椎茸と共に甘くて香ばしい醤油でじっくり煮込みました。",
+      "tags": [
+        "contains-pork"
+      ],
+      "nutrition": {
+        "calories": 1100,
+        "protein": 50,
+        "carbs": 30,
+        "fat": 95,
+        "sodium": 2200,
+        "allergens": "Soy, Wheat"
+      }
+    },
+    {
+      "original": "油泼麻辣牛肉",
+      "english": "Spicy Beef in Hot Oil",
+      "chinese": "油泼麻辣牛肉",
+      "japanese": "牛肉の四川風辣油がけ",
+      "description": "",
+      "description_en": "Tender slices of beef served in a bowl and doused with sizzling hot oil infused with chili and spices.",
+      "description_zh": "嫩牛肉片盛在碗中，淋上滚烫的辣椒和香料热油。",
+      "description_ja": "柔らかい牛肉のスライスに、唐辛子とスパイスを効かせた熱々の油をかけた料理。",
+      "tags": [
+        "spicy",
+        "contains-beef"
+      ],
+      "nutrition": {
+        "calories": 950,
+        "protein": 70,
+        "carbs": 10,
+        "fat": 70,
+        "sodium": 2500,
+        "allergens": "Soy, Wheat"
+      }
+    },
+    {
+      "original": "辣椒小炒肉",
+      "english": "Wok-fried Pork with Green Chili",
+      "chinese": "辣椒小炒肉",
+      "japanese": "豚肉と青唐辛子の炒め物",
+      "description": "",
+      "description_en": "A simple yet flavorful dish of sliced pork stir-fried with an abundance of fresh green chilies and savory seasonings.",
+      "description_zh": "一道简单而美味的家常菜，用猪肉片和大量新鲜青椒以及美味的调味料一同翻炒。",
+      "description_ja": "豚肉のスライスをたっぷりの新鮮な青唐辛子と風味豊かな調味料で炒めた、シンプルながらも味わい深い一品。",
+      "tags": [
+        "spicy",
+        "contains-pork"
+      ],
+      "nutrition": {
+        "calories": 750,
+        "protein": 45,
+        "carbs": 18,
+        "fat": 58,
+        "sodium": 2000,
+        "allergens": "Soy, Wheat"
+      }
+    },
+    {
+      "original": "麻婆豆腐",
+      "english": "Mapo Tofu",
+      "chinese": "麻婆豆腐",
+      "japanese": "麻婆豆腐",
+      "description": "",
+      "description_en": "Silken tofu and minced meat set in a spicy, numbing, and oily sauce made with fermented broad bean paste (doubanjiang).",
+      "description_zh": "嫩豆腐和肉末配以豆瓣酱制成的麻辣油润酱汁。",
+      "description_ja": "滑らかな豆腐と挽肉を、豆板醤をベースにしたスパイシーで痺れる風味の油ソースで仕上げた一品。",
+      "tags": [
+        "spicy",
+        "contains-pork"
+      ],
+      "nutrition": {
+        "calories": 800,
+        "protein": 40,
+        "carbs": 20,
+        "fat": 65,
+        "sodium": 2400,
+        "allergens": "Soy, Wheat"
+      }
+    }
+  ]
 };
-
