@@ -1397,9 +1397,18 @@
                 
                 // Execute the script to get the menuData
                 try {
+                    console.log('About to execute script content...');
+                    console.log('Script content preview:', scriptContent.substring(0, 500));
                     eval(scriptContent);
                     console.log('Script executed successfully');
                     showNotification('⚙️ Script executed successfully', 'success', 3000);
+                    
+                    // Immediately check what variables were created
+                    console.log('Variables immediately after eval:');
+                    console.log('- window.polishMenuData:', window.polishMenuData);
+                    console.log('- window.sichuanMenuData:', window.sichuanMenuData);
+                    console.log('- window.menuData:', window.menuData);
+                    console.log('- All window variables with "menu":', Object.keys(window).filter(key => key.toLowerCase().includes('menu')));
                 } catch (evalError) {
                     const errorMsg = `❌ Script execution failed: ${evalError.message}`;
                     console.error('Error executing script:', evalError);
@@ -1436,6 +1445,9 @@
                     console.warn('- Expected: window.sichuanMenuData');
                     console.warn('- Expected: window.menuData');
                     console.warn('Available window variables:', Object.keys(window).filter(key => key.includes('Menu') || key.includes('menu')));
+                    console.warn('Script content that was executed:');
+                    console.warn(scriptContent.substring(0, 1000));
+                    console.warn('This suggests the JavaScript file may not contain the expected variable declarations');
                     loadedData = menuData;
                 }
                 
