@@ -1588,8 +1588,8 @@
         // Language mapping
         const languageMap = {
             'en': { name: 'English', flag: '🇺🇸', key: 'english', original: 'Original' },
-            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: '原文' },
-            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: '原文' }
+            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: 'Original' },
+            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: 'Original' }
         };
 
         // Translation functions
@@ -1614,7 +1614,16 @@
                     'glutenFree': 'Gluten Free',
                     'nutFree': 'Nut Free',
                     'containsEggs': 'Contains Eggs',
-                    'containsBeef': 'Contains Beef'
+                    'containsBeef': 'Contains Beef',
+                    'containsSeafood': 'Contains Seafood',
+                    'containsGluten': 'Contains Gluten',
+                    'containsNuts': 'Contains Nuts',
+                    'indulgent': 'Indulgent',
+                    'balanced': 'Balanced',
+                    'light': 'Light',
+                    'healthTip1': 'This is a hearty dish perfect for special occasions.',
+                    'healthTip2': 'A well-balanced meal with good nutritional value.',
+                    'healthTip3': 'A light and healthy option for everyday dining.'
                 },
                 'zh': {
                     'viewNutrition': '查看营养',
@@ -1635,7 +1644,16 @@
                     'glutenFree': '无麸质',
                     'nutFree': '无坚果',
                     'containsEggs': '含鸡蛋',
-                    'containsBeef': '含牛肉'
+                    'containsBeef': '含牛肉',
+                    'containsSeafood': '含海鲜',
+                    'containsGluten': '含麸质',
+                    'containsNuts': '含坚果',
+                    'indulgent': '丰盛',
+                    'balanced': '均衡',
+                    'light': '清淡',
+                    'healthTip1': '这是一道丰盛的菜肴，非常适合特殊场合。',
+                    'healthTip2': '营养均衡的餐食，具有很好的营养价值。',
+                    'healthTip3': '清淡健康的选择，适合日常用餐。'
                 },
                 'ja': {
                     'viewNutrition': '栄養情報',
@@ -1656,7 +1674,16 @@
                     'glutenFree': 'グルテンフリー',
                     'nutFree': 'ナッツフリー',
                     'containsEggs': '卵含有',
-                    'containsBeef': '牛肉含有'
+                    'containsBeef': '牛肉含有',
+                    'containsSeafood': '魚介類含有',
+                    'containsGluten': 'グルテン含有',
+                    'containsNuts': 'ナッツ含有',
+                    'indulgent': '贅沢',
+                    'balanced': 'バランス',
+                    'light': '軽い',
+                    'healthTip1': '特別な機会に最適な、心のこもった料理です。',
+                    'healthTip2': '栄養価の高い、バランスの取れた食事です。',
+                    'healthTip3': '日常の食事に適した、軽くて健康的な選択肢です。'
                 }
             };
             return translations[selectedLanguage]?.[key] || translations['en'][key];
@@ -2045,24 +2072,27 @@
                 'contains-dairy': `🥛 ${getTranslation('containsDairy')}`,
                 'contains-eggs': `🥚 ${getTranslation('containsEggs')}`,
                 'contains-beef': `🐄 ${getTranslation('containsBeef')}`,
+                'contains-seafood': `🐟 ${getTranslation('containsSeafood')}`,
+                'contains-gluten': `🌾 ${getTranslation('containsGluten')}`,
+                'contains-nuts': `🥜 ${getTranslation('containsNuts')}`,
                 'alcohol': `🍷 ${getTranslation('alcohol')}`
             };
             return tagLabels[tag] || tag;
         }
 
         function getHealthTag(calories) {
-            if (calories > 500) return 'indulgent';
-            if (calories > 300) return 'balanced';
-            return 'light';
+            if (calories > 500) return getTranslation('indulgent');
+            if (calories > 300) return getTranslation('balanced');
+            return getTranslation('light');
         }
 
         function getHealthRecommendation(calories, protein, fat) {
             if (calories > 500) {
-                return `This is a high-calorie dish with ${calories} calories. Consider sharing or pairing with lighter options to balance your meal.`;
+                return getTranslation('healthTip1');
             } else if (calories > 300) {
-                return `A balanced choice with ${calories} calories. Good protein content at ${protein}g and moderate fat at ${fat}g.`;
+                return getTranslation('healthTip2');
             } else {
-                return `A lighter option with ${calories} calories. Great for those watching their calorie intake.`;
+                return getTranslation('healthTip3');
             }
         }
 
