@@ -1587,10 +1587,80 @@
 
         // Language mapping
         const languageMap = {
-            'en': { name: 'English', flag: '🇺🇸', key: 'english' },
-            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese' },
-            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese' }
+            'en': { name: 'English', flag: '🇺🇸', key: 'english', original: 'Original' },
+            'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: '原文' },
+            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: '原文' }
         };
+
+        // Translation functions
+        function getTranslation(key) {
+            const translations = {
+                'en': {
+                    'viewNutrition': 'View Nutrition',
+                    'generateAI': 'Generate AI Image',
+                    'calories': 'Calories',
+                    'protein': 'Protein',
+                    'carbs': 'Carbs',
+                    'fat': 'Fat',
+                    'sodium': 'Sodium',
+                    'allergens': 'Allergens',
+                    'spicy': 'Spicy',
+                    'containsPork': 'Contains Pork',
+                    'containsDairy': 'Contains Dairy',
+                    'containsSeafood': 'Contains Seafood',
+                    'alcohol': 'Alcohol',
+                    'vegetarian': 'Vegetarian',
+                    'vegan': 'Vegan',
+                    'glutenFree': 'Gluten Free',
+                    'nutFree': 'Nut Free',
+                    'containsEggs': 'Contains Eggs',
+                    'containsBeef': 'Contains Beef'
+                },
+                'zh': {
+                    'viewNutrition': '查看营养',
+                    'generateAI': '生成AI图片',
+                    'calories': '卡路里',
+                    'protein': '蛋白质',
+                    'carbs': '碳水化合物',
+                    'fat': '脂肪',
+                    'sodium': '钠',
+                    'allergens': '过敏原',
+                    'spicy': '辣',
+                    'containsPork': '含猪肉',
+                    'containsDairy': '含乳制品',
+                    'containsSeafood': '含海鲜',
+                    'alcohol': '酒精',
+                    'vegetarian': '素食',
+                    'vegan': '纯素',
+                    'glutenFree': '无麸质',
+                    'nutFree': '无坚果',
+                    'containsEggs': '含鸡蛋',
+                    'containsBeef': '含牛肉'
+                },
+                'ja': {
+                    'viewNutrition': '栄養情報',
+                    'generateAI': 'AI画像生成',
+                    'calories': 'カロリー',
+                    'protein': 'タンパク質',
+                    'carbs': '炭水化物',
+                    'fat': '脂肪',
+                    'sodium': 'ナトリウム',
+                    'allergens': 'アレルゲン',
+                    'spicy': '辛い',
+                    'containsPork': '豚肉含有',
+                    'containsDairy': '乳製品含有',
+                    'containsSeafood': '魚介類含有',
+                    'alcohol': 'アルコール',
+                    'vegetarian': 'ベジタリアン',
+                    'vegan': 'ビーガン',
+                    'glutenFree': 'グルテンフリー',
+                    'nutFree': 'ナッツフリー',
+                    'containsEggs': '卵含有',
+                    'containsBeef': '牛肉含有'
+                }
+            };
+            return translations[selectedLanguage]?.[key] || translations['en'][key];
+        }
 
         // Enhanced upload functionality
         function initializeUploadArea() {
@@ -1653,6 +1723,11 @@
             
             // Enable process button
             document.getElementById('processBtn').disabled = false;
+            
+            // Refresh the display if menu is already loaded
+            if (menuData && menuData.dishes) {
+                displayMenuResults();
+            }
         }
 
         function handleFileUpload(input) {
@@ -1889,7 +1964,7 @@
                     <div class="dish-column original">
                         <div class="column-header">
                             <div class="flag-icon">${originalLang.flag}</div>
-                            <span>${originalLang.name} (Original)</span>
+                            <span>${originalLang.name} (${languageMap[selectedLanguage].original})</span>
                         </div>
                         <div class="dish-title">${dish.original}</div>
                         <div class="dish-description">${dish.description}</div>
@@ -1912,41 +1987,41 @@
                 <div class="dish-actions">
                     <button class="action-btn" onclick="showNutrition(${index})">
                         <span>📊</span>
-                        View Nutrition
+                        ${getTranslation('viewNutrition')}
                     </button>
                     <button class="action-btn" onclick="generateAIImage(${index})">
                         <span>🎨</span>
-                        Generate AI Image
+                        ${getTranslation('generateAI')}
                     </button>
                 </div>
                 <div class="nutrition-panel" id="nutrition-${index}">
                     <div class="nutrition-header">
-                        <h3 class="nutrition-title">Nutrition Insights: ${dish[originalLang.key]}</h3>
+                        <h3 class="nutrition-title">${getTranslation('viewNutrition')}: ${dish[originalLang.key]}</h3>
                     </div>
                     <div class="nutrition-grid">
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.calories}</div>
-                            <div class="nutrition-label">Calories</div>
+                            <div class="nutrition-label">${getTranslation('calories')}</div>
                         </div>
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.protein}g</div>
-                            <div class="nutrition-label">Protein</div>
+                            <div class="nutrition-label">${getTranslation('protein')}</div>
                         </div>
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.carbs}g</div>
-                            <div class="nutrition-label">Carbs</div>
+                            <div class="nutrition-label">${getTranslation('carbs')}</div>
                         </div>
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.fat}g</div>
-                            <div class="nutrition-label">Fat</div>
+                            <div class="nutrition-label">${getTranslation('fat')}</div>
                         </div>
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.sodium}mg</div>
-                            <div class="nutrition-label">Sodium</div>
+                            <div class="nutrition-label">${getTranslation('sodium')}</div>
                         </div>
                         <div class="nutrition-item">
                             <div class="nutrition-value">${dish.nutrition.allergens}</div>
-                            <div class="nutrition-label">Allergens</div>
+                            <div class="nutrition-label">${getTranslation('allergens')}</div>
                         </div>
                     </div>
                     <div class="health-recommendation">
@@ -1962,15 +2037,15 @@
 
         function getTagLabel(tag) {
             const tagLabels = {
-                'spicy': '🌶️ Spicy',
-                'vegan': '🌱 Vegan',
-                'vegetarian': '🥬 Vegetarian',
-                'gluten-free': '✅ Gluten-Free',
-                'contains-pork': '🐷 Contains Pork',
-                'contains-dairy': '🥛 Contains Dairy',
-                'contains-eggs': '🥚 Contains Eggs',
-                'contains-beef': '🐄 Contains Beef',
-                'alcohol': '🍷 Alcohol'
+                'spicy': `🌶️ ${getTranslation('spicy')}`,
+                'vegan': `🌱 ${getTranslation('vegan')}`,
+                'vegetarian': `🥬 ${getTranslation('vegetarian')}`,
+                'gluten-free': `✅ ${getTranslation('glutenFree')}`,
+                'contains-pork': `🐷 ${getTranslation('containsPork')}`,
+                'contains-dairy': `🥛 ${getTranslation('containsDairy')}`,
+                'contains-eggs': `🥚 ${getTranslation('containsEggs')}`,
+                'contains-beef': `🐄 ${getTranslation('containsBeef')}`,
+                'alcohol': `🍷 ${getTranslation('alcohol')}`
             };
             return tagLabels[tag] || tag;
         }
