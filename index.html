@@ -503,60 +503,6 @@
         .health-tag.balanced { background: var(--light-green); color: var(--success-green); }
         .health-tag.light { background: var(--light-blue); color: var(--hilton-blue); }
 
-        /* AI Image Gallery */
-        .ai-gallery {
-            background: var(--warm-off-white);
-            padding: 80px 0;
-        }
-
-        .gallery-header {
-            text-align: center;
-            margin-bottom: 48px;
-        }
-
-        .gallery-header h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--deep-navy);
-            margin-bottom: 16px;
-        }
-
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 24px;
-        }
-
-        .gallery-item {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .gallery-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .gallery-image {
-            width: 100%;
-            height: 200px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #94a3b8;
-            font-size: 3rem;
-        }
-
-        .gallery-caption {
-            padding: 16px;
-            font-size: 0.875rem;
-            color: #64748b;
-            line-height: 1.5;
-        }
 
         /* Footer */
         .footer {
@@ -1235,19 +1181,6 @@
         </div>
     </section>
 
-    <!-- AI Image Gallery -->
-    <section class="ai-gallery hidden" id="aiGallery">
-        <div class="container">
-            <div class="gallery-header">
-                <h2>AI Generated Dish Images</h2>
-                <p>Visual references for better understanding</p>
-            </div>
-            
-            <div class="gallery-grid" id="galleryGrid">
-                <!-- AI images will be populated here -->
-            </div>
-        </div>
-    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1623,7 +1556,8 @@
                     'light': 'Light',
                     'healthTip1': 'This is a hearty dish perfect for special occasions.',
                     'healthTip2': 'A well-balanced meal with good nutritional value.',
-                    'healthTip3': 'A light and healthy option for everyday dining.'
+                    'healthTip3': 'A light and healthy option for everyday dining.',
+                    'disclaimer': 'Estimates only. Not medical advice.'
                 },
                 'zh': {
                     'viewNutrition': '查看营养',
@@ -1653,7 +1587,8 @@
                     'light': '清淡',
                     'healthTip1': '这是一道丰盛的菜肴，非常适合特殊场合。',
                     'healthTip2': '营养均衡的餐食，具有很好的营养价值。',
-                    'healthTip3': '清淡健康的选择，适合日常用餐。'
+                    'healthTip3': '清淡健康的选择，适合日常用餐。',
+                    'disclaimer': '仅供参考。非医疗建议。'
                 },
                 'ja': {
                     'viewNutrition': '栄養情報',
@@ -1683,7 +1618,8 @@
                     'light': '軽い',
                     'healthTip1': '特別な機会に最適な、心のこもった料理です。',
                     'healthTip2': '栄養価の高い、バランスの取れた食事です。',
-                    'healthTip3': '日常の食事に適した、軽くて健康的な選択肢です。'
+                    'healthTip3': '日常の食事に適した、軽くて健康的な選択肢です。',
+                    'disclaimer': '推定値のみ。医療アドバイスではありません。'
                 }
             };
             return translations[selectedLanguage]?.[key] || translations['en'][key];
@@ -2054,7 +1990,7 @@
                     <div class="health-recommendation">
                         <div class="health-tag ${getHealthTag(dish.nutrition.calories)}">${getHealthTag(dish.nutrition.calories)}</div>
                         <p>${getHealthRecommendation(dish.nutrition.calories, dish.nutrition.protein, dish.nutrition.fat)}</p>
-                        <p style="font-size: 0.875rem; color: #64748b; margin-top: 12px;">Estimates only. Not medical advice.</p>
+                        <p style="font-size: 0.875rem; color: #64748b; margin-top: 12px;">${getTranslation('disclaimer')}</p>
                     </div>
                 </div>
             `;
