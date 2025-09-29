@@ -2131,42 +2131,47 @@
                 
                 console.log('Optimized search query:', searchQuery);
                 
-                // 使用Unsplash API搜索相关食物图片，添加更多筛选条件
-                const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
-                const unsplashData = await unsplashResponse.json();
+                // 使用Foodish API获取食物图片 (免费且可靠)
+                console.log('Getting food image for:', dishName);
                 
-                if (unsplashData.results && unsplashData.results.length > 0) {
-                    // 从多个结果中选择最合适的图片
-                    let selectedImage = null;
-                    
-                    // 优先选择高质量图片
-                    for (let i = 0; i < unsplashData.results.length; i++) {
-                        const result = unsplashData.results[i];
-                        // 检查图片描述是否包含食物相关词汇
-                        const description = (result.description || result.alt_description || '').toLowerCase();
-                        if (description.includes('food') || description.includes('dish') || 
-                            description.includes('meal') || description.includes('cuisine') ||
-                            description.includes('cooking') || description.includes('restaurant') ||
-                            description.includes('美食') || description.includes('菜品') ||
-                            description.includes('料理') || description.includes('食べ物')) {
-                            selectedImage = result;
-                            break;
-                        }
-                    }
-                    
-                    // 如果没有找到明确的食物图片，使用第一个结果
-                    if (!selectedImage) {
-                        selectedImage = unsplashData.results[0];
-                    }
-                    
-                    const imageUrl = selectedImage.urls.regular;
-                    showAIImageModal(imageUrl, dishName + ' (相关图片)');
-                    showNotification('显示相关图片', 'success');
-                } else {
-                    throw new Error('No images found');
+                // 根据菜品类型选择不同的食物图片
+                let foodCategory = 'pizza'; // 默认
+                if (dishType.english.includes('sichuan') || dishType.english.includes('spicy')) {
+                    foodCategory = 'chinese';
+                } else if (dishType.english.includes('soup')) {
+                    foodCategory = 'soup';
+                } else if (dishType.english.includes('noodle')) {
+                    foodCategory = 'pasta';
+                } else if (dishType.english.includes('meat')) {
+                    foodCategory = 'meat';
+                } else if (dishType.english.includes('seafood')) {
+                    foodCategory = 'seafood';
+                } else if (dishType.english.includes('vegetable')) {
+                    foodCategory = 'salad';
+                } else if (dishType.english.includes('dessert')) {
+                    foodCategory = 'dessert';
                 }
-            } catch (unsplashError) {
-                console.log('Unsplash API failed, using fallback');
+                
+                console.log('Food category:', foodCategory);
+                
+                // 使用Foodish API获取随机食物图片
+                const foodishResponse = await fetch(`https://foodish-api.herokuapp.com/api/images/${foodCategory}`);
+                
+                if (foodishResponse.ok) {
+                    const result = await foodishResponse.json();
+                    console.log('Foodish response:', result);
+                    
+                    if (result.image) {
+                        showAIImageModal(result.image, dishName + ' (相关图片)');
+                        showNotification('显示相关图片', 'success');
+                    } else {
+                        throw new Error('No image found');
+                    }
+                } else {
+                    throw new Error('Foodish API failed');
+                }
+            } catch (foodishError) {
+                console.log('Foodish API failed, using fallback');
                 // 最终备用方案 - 使用多个备用菜品图片
                 const fallbackImages = [
                     'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 汉堡
