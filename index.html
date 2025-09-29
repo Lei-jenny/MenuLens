@@ -944,8 +944,10 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             z-index: 1001;
-            transform: translateX(400px);
+            transform: translateX(100%);
             transition: transform 0.3s ease;
+            max-width: 300px;
+            word-wrap: break-word;
         }
 
         .notification.show {
@@ -1265,6 +1267,7 @@
         let currentDishes = [];
         let currentPage = 1;
         const itemsPerPage = 10;
+        let menuProcessed = false;
 
         // Function to load menu data based on uploaded image filename
         async function loadMenuData(filename) {
@@ -1672,8 +1675,16 @@
             
             console.log(`[${type.toUpperCase()}] ${message}`);
             
-            setTimeout(() => {
+            // Clear any existing timeout
+            if (notification.timeoutId) {
+                clearTimeout(notification.timeoutId);
+            }
+            
+            // Set new timeout
+            notification.timeoutId = setTimeout(() => {
                 notification.classList.remove('show');
+                // Clean up timeout reference
+                delete notification.timeoutId;
             }, duration);
         }
 
@@ -1701,8 +1712,8 @@
             // Update menu section header with animation
             updateMenuHeader();
             
-            // Refresh the display if menu is already loaded
-            if (menuData && menuData.dishes) {
+            // Only refresh display if menu has been processed
+            if (menuProcessed && menuData && menuData.dishes) {
                 displayMenuResults();
             }
         }
@@ -1867,6 +1878,7 @@
                     
                     // Hide loading and show results
                     hideLoading();
+                    menuProcessed = true; // Mark menu as processed
                     displayMenuResults();
                     showNotification('Menu processed successfully!', 'success');
                 }
