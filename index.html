@@ -1973,7 +1973,7 @@
                             <span>${languageMap[selectedLanguage].original}</span>
                         </div>
                         <div class="dish-title">${dish.original}</div>
-                        <div class="dish-description">${dish.description}</div>
+                        <div class="dish-description">${dish.description_en || dish.description}</div>
                         <div class="tags">
                             ${dish.tags.map(tag => `<span class="tag ${tag}">${getTagLabel(tag)}</span>`).join('')}
                         </div>
@@ -1984,7 +1984,7 @@
                             <span>${translatedLang.name} (Translation)</span>
                         </div>
                         <div class="dish-title">${dish[translatedLang.key]}</div>
-                        <div class="dish-description">${dish[`description_${translatedLang.key}`] || dish.description}</div>
+                        <div class="dish-description">${getDishDescription(dish, selectedLanguage)}</div>
                         <div class="tags">
                             ${dish.tags.map(tag => `<span class="tag ${tag}">${getTagLabel(tag)}</span>`).join('')}
                         </div>
@@ -2096,13 +2096,8 @@
                 return;
             }
 
-            // 获取当前语言的菜名
-            let dishName = dish.original; // 默认使用原文
-            if (selectedLanguage === 'zh' && dish.chinese) {
-                dishName = dish.chinese;
-            } else if (selectedLanguage === 'ja' && dish.japanese) {
-                dishName = dish.japanese;
-            }
+            // 始终使用原始语言进行搜索，确保准确性
+            let dishName = dish.original;
 
             // 显示加载状态
             const button = document.querySelector(`[onclick="generateAIImage(${index})"]`);
@@ -2290,6 +2285,19 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // 根据选择语言获取菜品描述
+        function getDishDescription(dish, language) {
+            if (language === 'zh' && dish.description_zh) {
+                return dish.description_zh;
+            } else if (language === 'ja' && dish.description_ja) {
+                return dish.description_ja;
+            } else if (language === 'en' && dish.description_en) {
+                return dish.description_en;
+            }
+            // 如果没有对应语言的描述，返回默认描述
+            return dish.description || dish.description_en || 'No description available';
         }
 
         // 分析菜品类型，提供更精确的搜索关键词
