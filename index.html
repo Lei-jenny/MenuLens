@@ -2077,27 +2077,165 @@
             }
         }
 
-        function generateAIImage(index) {
+        async function generateAIImage(index) {
             const dish = currentDishes[index];
-            showLoading();
-            
-            // Simulate AI image generation
-            setTimeout(() => {
-                hideLoading();
-                showNotification(`AI image generated for: ${dish[languageMap[selectedLanguage].key]}`, 'success');
+            if (!dish) {
+                showNotification('Dish not found', 'error');
+                return;
+            }
+
+            // 获取当前语言的菜名
+            let dishName = dish.original; // 默认使用原文
+            if (selectedLanguage === 'zh' && dish.chinese) {
+                dishName = dish.chinese;
+            } else if (selectedLanguage === 'ja' && dish.japanese) {
+                dishName = dish.japanese;
+            }
+
+            // 显示加载状态
+            const button = document.querySelector(`[onclick="generateAIImage(${index})"]`);
+            const originalText = button.textContent;
+            button.textContent = '生成中...';
+            button.disabled = true;
+
+            try {
+                console.log('Generating AI image for:', dishName, 'in language:', selectedLanguage);
                 
-                // Add to gallery
-                const galleryGrid = document.getElementById('galleryGrid');
-                const newImage = document.createElement('div');
-                newImage.className = 'gallery-item';
-                newImage.innerHTML = `
-                    <div class="gallery-image">
-                        <img src="${dish.image}" alt="${dish[languageMap[selectedLanguage].key]}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                const response = await fetch('/api/generate-image', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        dishName: dishName,
+                        language: selectedLanguage
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 显示生成的图片
+                    showAIImageModal(data.imageUrl, dishName);
+                    showNotification('AI图片生成成功！', 'success');
+                } else {
+                    throw new Error(data.error || '生成失败');
+                }
+
+            } catch (error) {
+                console.error('Error generating AI image:', error);
+                showNotification(`AI图片生成失败: ${error.message}`, 'error');
+            } finally {
+                // 恢复按钮状态
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+
+        function showAIImageModal(imageUrl, dishName) {
+            // 创建模态框
+            const modal = document.createElement('div');
+            modal.className = 'ai-image-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 10000;
+                animation: fadeIn 0.3s ease;
+            `;
+
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 16px;
+                    padding: 24px;
+                    max-width: 90%;
+                    max-height: 90%;
+                    position: relative;
+                    animation: slideIn 0.3s ease;
+                ">
+                    <button onclick="this.closest('.ai-image-modal').remove()" style="
+                        position: absolute;
+                        top: 12px;
+                        right: 12px;
+                        background: #ef4444;
+                        color: white;
+                        border: none;
+                        border-radius: 50%;
+                        width: 32px;
+                        height: 32px;
+                        cursor: pointer;
+                        font-size: 18px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    ">×</button>
+                    <h3 style="margin: 0 0 16px 0; color: #1f2937; text-align: center;">${dishName}</h3>
+                    <img src="${imageUrl}" alt="${dishName}" style="
+                        max-width: 100%;
+                        max-height: 70vh;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    ">
+                    <div style="text-align: center; margin-top: 16px;">
+                        <button onclick="downloadImage('${imageUrl}', '${dishName}')" style="
+                            background: var(--hilton-blue);
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                            margin-right: 8px;
+                        ">下载图片</button>
+                        <button onclick="this.closest('.ai-image-modal').remove()" style="
+                            background: #6b7280;
+                            color: white;
+                            border: none;
+                            padding: 8px 16px;
+                            border-radius: 8px;
+                            cursor: pointer;
+                        ">关闭</button>
                     </div>
-                    <div class="gallery-caption">AI Generated: ${dish[languageMap[selectedLanguage].key]}</div>
-                `;
-                galleryGrid.insertBefore(newImage, galleryGrid.firstChild);
-            }, 2000);
+                </div>
+            `;
+
+            // 添加CSS动画
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes slideIn {
+                    from { transform: scale(0.8); opacity: 0; }
+                    to { transform: scale(1); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(modal);
+
+            // 点击背景关闭
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        function downloadImage(imageUrl, dishName) {
+            const link = document.createElement('a');
+            link.href = imageUrl;
+            link.download = `${dishName}_AI_generated.jpg`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
 
