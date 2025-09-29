@@ -2102,17 +2102,22 @@
             console.log('Searching for food image:', dishName, 'in language:', selectedLanguage);
             
             try {
-                // 构建搜索查询，根据语言优化搜索词
-                let searchQuery = dishName;
+                // 构建更精确的搜索查询
+                let searchQuery = '';
+                
+                // 分析菜品类型并添加相关关键词
+                const dishType = analyzeDishType(dishName);
+                console.log('Detected dish type:', dishType);
+                
                 if (selectedLanguage === 'zh') {
-                    searchQuery = dishName + ' 食物 菜品';
+                    searchQuery = dishName + ' ' + dishType.chinese;
                 } else if (selectedLanguage === 'ja') {
-                    searchQuery = dishName + ' 料理 食べ物';
+                    searchQuery = dishName + ' ' + dishType.japanese;
                 } else {
-                    searchQuery = dishName + ' food dish';
+                    searchQuery = dishName + ' ' + dishType.english;
                 }
                 
-                console.log('Search query:', searchQuery);
+                console.log('Optimized search query:', searchQuery);
                 
                 // 使用Unsplash API搜索相关食物图片
                 const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=1&orientation=landscape&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
@@ -2247,6 +2252,98 @@
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        }
+
+        // 分析菜品类型，提供更精确的搜索关键词
+        function analyzeDishType(dishName) {
+            const name = dishName.toLowerCase();
+            
+            // 酒类检测
+            if (name.includes('wine') || name.includes('酒') || name.includes('ワイン') || 
+                name.includes('beer') || name.includes('啤酒') || name.includes('ビール') ||
+                name.includes('cocktail') || name.includes('鸡尾酒') || name.includes('カクテル') ||
+                name.includes('whiskey') || name.includes('威士忌') || name.includes('ウィスキー') ||
+                name.includes('sake') || name.includes('清酒') || name.includes('日本酒')) {
+                return {
+                    english: 'alcoholic drink beverage',
+                    chinese: '酒类 饮品',
+                    japanese: '酒 飲み物'
+                };
+            }
+            
+            // 汤类检测
+            if (name.includes('soup') || name.includes('汤') || name.includes('スープ') ||
+                name.includes('broth') || name.includes('汤') || name.includes('汁')) {
+                return {
+                    english: 'soup bowl',
+                    chinese: '汤类 汤品',
+                    japanese: 'スープ 汁物'
+                };
+            }
+            
+            // 面类检测
+            if (name.includes('noodle') || name.includes('面') || name.includes('麺') ||
+                name.includes('pasta') || name.includes('意大利面') || name.includes('パスタ') ||
+                name.includes('ramen') || name.includes('拉面') || name.includes('ラーメン')) {
+                return {
+                    english: 'noodle pasta dish',
+                    chinese: '面条 面食',
+                    japanese: '麺類 パスタ'
+                };
+            }
+            
+            // 肉类检测
+            if (name.includes('beef') || name.includes('牛肉') || name.includes('牛肉') ||
+                name.includes('pork') || name.includes('猪肉') || name.includes('豚肉') ||
+                name.includes('chicken') || name.includes('鸡肉') || name.includes('鶏肉') ||
+                name.includes('lamb') || name.includes('羊肉') || name.includes('羊肉')) {
+                return {
+                    english: 'meat dish protein',
+                    chinese: '肉类 荤菜',
+                    japanese: '肉料理 メイン'
+                };
+            }
+            
+            // 海鲜检测
+            if (name.includes('fish') || name.includes('鱼') || name.includes('魚') ||
+                name.includes('shrimp') || name.includes('虾') || name.includes('エビ') ||
+                name.includes('crab') || name.includes('蟹') || name.includes('カニ') ||
+                name.includes('lobster') || name.includes('龙虾') || name.includes('ロブスター')) {
+                return {
+                    english: 'seafood fish dish',
+                    chinese: '海鲜 鱼类',
+                    japanese: '魚介類 シーフード'
+                };
+            }
+            
+            // 蔬菜检测
+            if (name.includes('salad') || name.includes('沙拉') || name.includes('サラダ') ||
+                name.includes('vegetable') || name.includes('蔬菜') || name.includes('野菜') ||
+                name.includes('green') || name.includes('青菜') || name.includes('青菜')) {
+                return {
+                    english: 'vegetable salad healthy',
+                    chinese: '蔬菜 素食',
+                    japanese: '野菜 サラダ'
+                };
+            }
+            
+            // 甜点检测
+            if (name.includes('dessert') || name.includes('甜点') || name.includes('デザート') ||
+                name.includes('cake') || name.includes('蛋糕') || name.includes('ケーキ') ||
+                name.includes('ice cream') || name.includes('冰淇淋') || name.includes('アイスクリーム')) {
+                return {
+                    english: 'dessert sweet treat',
+                    chinese: '甜点 甜品',
+                    japanese: 'デザート スイーツ'
+                };
+            }
+            
+            // 默认返回通用关键词
+            return {
+                english: 'food dish meal',
+                chinese: '食物 菜品',
+                japanese: '料理 食べ物'
+            };
         }
 
 
