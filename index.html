@@ -1527,7 +1527,7 @@
         const languageMap = {
             'en': { name: 'English', flag: '🇺🇸', key: 'english', original: 'Original' },
             'zh': { name: '中文', flag: '🇨🇳', key: 'chinese', original: '原文' },
-            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: '原文' }
+            'ja': { name: '日本語', flag: '🇯🇵', key: 'japanese', original: 'げんぶん' }
         };
 
         // Translation functions
@@ -1958,7 +1958,7 @@
                     <div class="dish-column original">
                         <div class="column-header">
                             <div class="flag-icon">${originalLang.flag}</div>
-                            <span>${originalLang.name} (${languageMap[selectedLanguage].original})</span>
+                            <span>${languageMap[selectedLanguage].original}</span>
                         </div>
                         <div class="dish-title">${dish.original}</div>
                         <div class="dish-description">${dish.description}</div>
