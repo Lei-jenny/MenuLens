@@ -2131,47 +2131,41 @@
                 
                 console.log('Optimized search query:', searchQuery);
                 
-                // 使用Foodish API获取食物图片 (免费且可靠)
-                console.log('Getting food image for:', dishName);
+                // 使用AI图片生成服务
+                console.log('Generating AI image for:', dishName);
                 
-                // 根据菜品类型选择不同的食物图片
-                let foodCategory = 'pizza'; // 默认
-                if (dishType.english.includes('sichuan') || dishType.english.includes('spicy')) {
-                    foodCategory = 'chinese';
-                } else if (dishType.english.includes('soup')) {
-                    foodCategory = 'soup';
-                } else if (dishType.english.includes('noodle')) {
-                    foodCategory = 'pasta';
-                } else if (dishType.english.includes('meat')) {
-                    foodCategory = 'meat';
-                } else if (dishType.english.includes('seafood')) {
-                    foodCategory = 'seafood';
-                } else if (dishType.english.includes('vegetable')) {
-                    foodCategory = 'salad';
-                } else if (dishType.english.includes('dessert')) {
-                    foodCategory = 'dessert';
+                // 构建AI提示词
+                let prompt = '';
+                if (originalLanguage === 'zh') {
+                    prompt = `${dishName} ${dishType.chinese} 美食 高清 专业摄影 餐厅菜品 精美摆盘`;
+                } else if (originalLanguage === 'ja') {
+                    prompt = `${dishName} ${dishType.japanese} 料理 高品質 プロの写真 レストラン料理 美しい盛り付け`;
+                } else {
+                    prompt = `${dishName} ${dishType.english} food, high quality, professional photography, restaurant dish, beautiful plating`;
                 }
                 
-                console.log('Food category:', foodCategory);
+                console.log('AI generation prompt:', prompt);
                 
-                // 使用Foodish API获取随机食物图片
-                const foodishResponse = await fetch(`https://foodish-api.herokuapp.com/api/images/${foodCategory}`);
+                // 使用Pixabay API搜索相关食物图片
+                const pixabayResponse = await fetch(`https://pixabay.com/api/?key=9656065-a4094594c34c9c8f8a7ce3c6f&q=${encodeURIComponent(prompt)}&category=food&min_width=512&min_height=512&safesearch=true&per_page=3`);
                 
-                if (foodishResponse.ok) {
-                    const result = await foodishResponse.json();
-                    console.log('Foodish response:', result);
+                if (pixabayResponse.ok) {
+                    const result = await pixabayResponse.json();
+                    console.log('Pixabay response:', result);
                     
-                    if (result.image) {
-                        showAIImageModal(result.image, dishName + ' (相关图片)');
-                        showNotification('显示相关图片', 'success');
+                    if (result.hits && result.hits.length > 0) {
+                        // 选择第一张图片
+                        const imageUrl = result.hits[0].webformatURL;
+                        showAIImageModal(imageUrl, dishName + ' (相关图片)');
+                        showNotification('AI图片生成成功', 'success');
                     } else {
-                        throw new Error('No image found');
+                        throw new Error('No images found');
                     }
                 } else {
-                    throw new Error('Foodish API failed');
+                    throw new Error('Pixabay API failed');
                 }
-            } catch (foodishError) {
-                console.log('Foodish API failed, using fallback');
+            } catch (pixabayError) {
+                console.log('Pixabay API failed, using fallback');
                 // 最终备用方案 - 使用多个备用菜品图片
                 const fallbackImages = [
                     'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 汉堡
