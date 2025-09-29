@@ -2101,16 +2101,27 @@
             try {
                 console.log('Generating AI image for:', dishName, 'in language:', selectedLanguage);
                 
-                const response = await fetch('/api/generate-image', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        dishName: dishName,
-                        language: selectedLanguage
-                    })
-                });
+                // 尝试API路由，如果失败则使用备用方案
+                let response;
+                try {
+                    response = await fetch('/api/generate-image', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            dishName: dishName,
+                            language: selectedLanguage
+                        })
+                    });
+                } catch (apiError) {
+                    console.log('API route not available, using fallback');
+                    // 使用备用图片
+                    const fallbackImage = `https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80`;
+                    showAIImageModal(fallbackImage, dishName + ' (示例图片)');
+                    showNotification('显示示例图片 (API暂不可用)', 'info');
+                    return;
+                }
 
                 const data = await response.json();
                 console.log('API response:', data);
