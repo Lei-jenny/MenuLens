@@ -2322,7 +2322,28 @@
         function analyzeDishType(dishName) {
             const name = dishName.toLowerCase();
             
-            // 川菜/辣菜检测 - 优先检测
+            // 酒类检测 - 最高优先级，避免被误认为肉类
+            if (name.includes('wine') || name.includes('酒') || name.includes('ワイン') || 
+                name.includes('beer') || name.includes('啤酒') || name.includes('ビール') ||
+                name.includes('cocktail') || name.includes('鸡尾酒') || name.includes('カクテル') ||
+                name.includes('whiskey') || name.includes('威士忌') || name.includes('ウィスキー') ||
+                name.includes('sake') || name.includes('清酒') || name.includes('日本酒') ||
+                name.includes('vodka') || name.includes('伏特加') || name.includes('ウォッカ') ||
+                name.includes('rum') || name.includes('朗姆酒') || name.includes('ラム') ||
+                name.includes('gin') || name.includes('金酒') || name.includes('ジン') ||
+                name.includes('tequila') || name.includes('龙舌兰') || name.includes('テキーラ') ||
+                name.includes('champagne') || name.includes('香槟') || name.includes('シャンパン') ||
+                name.includes('brandy') || name.includes('白兰地') || name.includes('ブランデー') ||
+                name.includes('liqueur') || name.includes('利口酒') || name.includes('リキュール') ||
+                name.includes('alcohol') || name.includes('酒精') || name.includes('アルコール')) {
+                return {
+                    english: 'alcoholic drink beverage cocktail',
+                    chinese: '酒类 饮品 酒精',
+                    japanese: '酒 飲み物 アルコール'
+                };
+            }
+            
+            // 川菜/辣菜检测 - 第二优先级
             if (name.includes('水煮') || name.includes('麻辣') || name.includes('川菜') || 
                 name.includes('辣') || name.includes('麻婆') || name.includes('宫保') ||
                 name.includes('回锅') || name.includes('口水') || name.includes('酸菜鱼') ||
@@ -2332,19 +2353,6 @@
                     english: 'sichuan spicy dish food',
                     chinese: '川菜 辣菜 美食',
                     japanese: '四川料理 辛い料理'
-                };
-            }
-            
-            // 酒类检测
-            if (name.includes('wine') || name.includes('酒') || name.includes('ワイン') || 
-                name.includes('beer') || name.includes('啤酒') || name.includes('ビール') ||
-                name.includes('cocktail') || name.includes('鸡尾酒') || name.includes('カクテル') ||
-                name.includes('whiskey') || name.includes('威士忌') || name.includes('ウィスキー') ||
-                name.includes('sake') || name.includes('清酒') || name.includes('日本酒')) {
-                return {
-                    english: 'alcoholic drink beverage',
-                    chinese: '酒类 饮品',
-                    japanese: '酒 飲み物'
                 };
             }
             
@@ -2369,11 +2377,16 @@
                 };
             }
             
-            // 肉类检测
-            if (name.includes('beef') || name.includes('牛肉') || name.includes('牛肉') ||
+            // 肉类检测 - 排除酒类关键词
+            if ((name.includes('beef') || name.includes('牛肉') || name.includes('牛肉') ||
                 name.includes('pork') || name.includes('猪肉') || name.includes('豚肉') ||
                 name.includes('chicken') || name.includes('鸡肉') || name.includes('鶏肉') ||
-                name.includes('lamb') || name.includes('羊肉') || name.includes('羊肉')) {
+                name.includes('lamb') || name.includes('羊肉') || name.includes('羊肉') ||
+                name.includes('duck') || name.includes('鸭肉') || name.includes('鴨肉') ||
+                name.includes('turkey') || name.includes('火鸡') || name.includes('七面鳥')) &&
+                !name.includes('wine') && !name.includes('酒') && !name.includes('ワイン') &&
+                !name.includes('beer') && !name.includes('啤酒') && !name.includes('ビール') &&
+                !name.includes('cocktail') && !name.includes('鸡尾酒') && !name.includes('カクテル')) {
                 return {
                     english: 'meat dish protein',
                     chinese: '肉类 荤菜',
@@ -2381,11 +2394,15 @@
                 };
             }
             
-            // 海鲜检测
-            if (name.includes('fish') || name.includes('鱼') || name.includes('魚') ||
+            // 海鲜检测 - 排除酒类关键词
+            if ((name.includes('fish') || name.includes('鱼') || name.includes('魚') ||
                 name.includes('shrimp') || name.includes('虾') || name.includes('エビ') ||
                 name.includes('crab') || name.includes('蟹') || name.includes('カニ') ||
-                name.includes('lobster') || name.includes('龙虾') || name.includes('ロブスター')) {
+                name.includes('lobster') || name.includes('龙虾') || name.includes('ロブスター') ||
+                name.includes('salmon') || name.includes('三文鱼') || name.includes('サーモン') ||
+                name.includes('tuna') || name.includes('金枪鱼') || name.includes('マグロ')) &&
+                !name.includes('wine') && !name.includes('酒') && !name.includes('ワイン') &&
+                !name.includes('beer') && !name.includes('啤酒') && !name.includes('ビール')) {
                 return {
                     english: 'seafood fish dish',
                     chinese: '海鲜 鱼类',
