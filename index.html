@@ -2116,10 +2116,14 @@
                 const dishType = analyzeDishType(dishName);
                 console.log('Detected dish type:', dishType);
                 
-                // 始终使用原始语言进行搜索，确保找到正确的菜品
-                if (selectedLanguage === 'zh') {
+                // 始终使用原始语言进行搜索，确保搜索结果一致
+                // 根据原始语言文本的语言类型添加相应关键词
+                const originalLanguage = detectLanguage(dishName);
+                console.log('Detected original language:', originalLanguage);
+                
+                if (originalLanguage === 'zh') {
                     searchQuery = dishName + ' ' + dishType.chinese + ' 菜品 美食';
-                } else if (selectedLanguage === 'ja') {
+                } else if (originalLanguage === 'ja') {
                     searchQuery = dishName + ' ' + dishType.japanese + ' 料理 食べ物';
                 } else {
                     searchQuery = dishName + ' ' + dishType.english + ' dish food';
@@ -2298,6 +2302,20 @@
             }
             // 如果没有对应语言的描述，返回默认描述
             return dish.description || dish.description_en || 'No description available';
+        }
+
+        // 检测文本语言类型
+        function detectLanguage(text) {
+            // 检测中文字符
+            if (/[\u4e00-\u9fff]/.test(text)) {
+                return 'zh';
+            }
+            // 检测日文字符（平假名、片假名、汉字）
+            if (/[\u3040-\u309f\u30a0-\u30ff\u4e00-\u9fff]/.test(text)) {
+                return 'ja';
+            }
+            // 默认为英文
+            return 'en';
         }
 
         // 分析菜品类型，提供更精确的搜索关键词
