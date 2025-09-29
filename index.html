@@ -2113,18 +2113,39 @@
                 });
 
                 const data = await response.json();
+                console.log('API response:', data);
 
                 if (data.success) {
                     // 显示生成的图片
                     showAIImageModal(data.imageUrl, dishName);
                     showNotification('AI图片生成成功！', 'success');
                 } else {
-                    throw new Error(data.error || '生成失败');
+                    console.error('API returned error:', data);
+                    throw new Error(data.details || data.error || '生成失败');
                 }
 
             } catch (error) {
                 console.error('Error generating AI image:', error);
-                showNotification(`AI图片生成失败: ${error.message}`, 'error');
+                let errorMessage = 'AI图片生成失败';
+                
+                if (error.message.includes('Failed to fetch')) {
+                    errorMessage += ': 网络连接失败，请检查网络连接';
+                } else if (error.message.includes('API configuration error')) {
+                    errorMessage += ': API配置错误，请联系管理员';
+                } else if (error.message.includes('API Error')) {
+                    errorMessage += `: ${error.message}`;
+                } else {
+                    errorMessage += `: ${error.message}`;
+                }
+                
+                showNotification(errorMessage, 'error');
+                
+                // 显示备用图片作为演示
+                setTimeout(() => {
+                    const fallbackImage = `https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80`;
+                    showAIImageModal(fallbackImage, dishName + ' (示例图片)');
+                    showNotification('显示示例图片', 'info');
+                }, 2000);
             } finally {
                 // 恢复按钮状态
                 button.textContent = originalText;
