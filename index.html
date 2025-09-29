@@ -2098,65 +2098,44 @@
             button.textContent = '生成中...';
             button.disabled = true;
 
+            // 使用Unsplash API获取相关食物图片
+            console.log('Searching for food image:', dishName, 'in language:', selectedLanguage);
+            
             try {
-                console.log('Generating AI image for:', dishName, 'in language:', selectedLanguage);
-                
-                // 尝试API路由，如果失败则使用备用方案
-                let response;
-                try {
-                    response = await fetch('/api/generate-image', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            dishName: dishName,
-                            language: selectedLanguage
-                        })
-                    });
-                } catch (apiError) {
-                    console.log('API route not available, using fallback');
-                    // 使用备用图片
-                    const fallbackImage = `https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80`;
-                    showAIImageModal(fallbackImage, dishName + ' (示例图片)');
-                    showNotification('显示示例图片 (API暂不可用)', 'info');
-                    return;
-                }
-
-                const data = await response.json();
-                console.log('API response:', data);
-
-                if (data.success) {
-                    // 显示生成的图片
-                    showAIImageModal(data.imageUrl, dishName);
-                    showNotification('AI图片生成成功！', 'success');
+                // 构建搜索查询，根据语言优化搜索词
+                let searchQuery = dishName;
+                if (selectedLanguage === 'zh') {
+                    searchQuery = dishName + ' 食物 菜品';
+                } else if (selectedLanguage === 'ja') {
+                    searchQuery = dishName + ' 料理 食べ物';
                 } else {
-                    console.error('API returned error:', data);
-                    throw new Error(data.details || data.error || '生成失败');
+                    searchQuery = dishName + ' food dish';
                 }
-
-            } catch (error) {
-                console.error('Error generating AI image:', error);
-                let errorMessage = 'AI图片生成失败';
                 
-                if (error.message.includes('Failed to fetch')) {
-                    errorMessage += ': 网络连接失败，请检查网络连接';
-                } else if (error.message.includes('API configuration error')) {
-                    errorMessage += ': API配置错误，请联系管理员';
-                } else if (error.message.includes('API Error')) {
-                    errorMessage += `: ${error.message}`;
+                console.log('Search query:', searchQuery);
+                
+                // 使用Unsplash API搜索相关食物图片
+                const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=1&orientation=landscape&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
+                const unsplashData = await unsplashResponse.json();
+                
+                if (unsplashData.results && unsplashData.results.length > 0) {
+                    const imageUrl = unsplashData.results[0].urls.regular;
+                    showAIImageModal(imageUrl, dishName + ' (相关图片)');
+                    showNotification('显示相关图片', 'success');
                 } else {
-                    errorMessage += `: ${error.message}`;
+                    throw new Error('No images found');
                 }
-                
-                showNotification(errorMessage, 'error');
-                
-                // 显示备用图片作为演示
-                setTimeout(() => {
-                    const fallbackImage = `https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80`;
-                    showAIImageModal(fallbackImage, dishName + ' (示例图片)');
-                    showNotification('显示示例图片', 'info');
-                }, 2000);
+            } catch (unsplashError) {
+                console.log('Unsplash API failed, using fallback');
+                // 最终备用方案 - 使用多个备用图片
+                const fallbackImages = [
+                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80',
+                    'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=512&h=512&fit=crop&crop=center&auto=format&q=80',
+                    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=512&h=512&fit=crop&crop=center&auto=format&q=80'
+                ];
+                const randomImage = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
+                showAIImageModal(randomImage, dishName + ' (示例图片)');
+                showNotification('显示示例图片', 'info');
             } finally {
                 // 恢复按钮状态
                 button.textContent = originalText;
