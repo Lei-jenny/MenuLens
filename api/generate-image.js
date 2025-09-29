@@ -21,8 +21,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Dish name is required' });
     }
 
-    if (!process.env.HUGGINGFACE_TOKEN) {
-        console.error('HUGGINGFACE_TOKEN not found in environment variables');
+    // 优先使用环境变量，如果没有则使用硬编码token（仅用于测试）
+    const token = process.env.HUGGINGFACE_TOKEN || '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';
+    
+    if (!token) {
+        console.error('No Hugging Face token available');
         return res.status(500).json({ 
             error: 'API configuration error',
             details: 'Hugging Face token not configured'
@@ -35,14 +38,14 @@ export default async function handler(req, res) {
         
         console.log('Generating image for:', dishName);
         console.log('Prompt:', prompt);
-        console.log('Using token:', process.env.HUGGINGFACE_TOKEN.substring(0, 10) + '...');
+        console.log('Using token:', token.substring(0, 10) + '...');
 
         // 调用Hugging Face API - 使用更简单的参数
         const response = await fetch(
             'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1',
             {
                 headers: {
-                    'Authorization': `Bearer ${process.env.HUGGINGFACE_TOKEN}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
                 method: 'POST',
