@@ -2114,29 +2114,53 @@
             console.log('Searching for food image:', dishName, 'in language:', selectedLanguage);
             
             try {
-                // 构建更精确的搜索查询
+                // 使用原始语言文本进行搜索，确保准确性
                 let searchQuery = '';
                 
                 // 分析菜品类型并添加相关关键词
                 const dishType = analyzeDishType(dishName);
                 console.log('Detected dish type:', dishType);
                 
+                // 始终使用原始语言进行搜索，确保找到正确的菜品
                 if (selectedLanguage === 'zh') {
-                    searchQuery = dishName + ' ' + dishType.chinese;
+                    searchQuery = dishName + ' ' + dishType.chinese + ' 菜品 美食';
                 } else if (selectedLanguage === 'ja') {
-                    searchQuery = dishName + ' ' + dishType.japanese;
+                    searchQuery = dishName + ' ' + dishType.japanese + ' 料理 食べ物';
                 } else {
-                    searchQuery = dishName + ' ' + dishType.english;
+                    searchQuery = dishName + ' ' + dishType.english + ' dish food';
                 }
                 
                 console.log('Optimized search query:', searchQuery);
                 
-                // 使用Unsplash API搜索相关食物图片
-                const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=1&orientation=landscape&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
+                // 使用Unsplash API搜索相关食物图片，添加更多筛选条件
+                const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
                 const unsplashData = await unsplashResponse.json();
                 
                 if (unsplashData.results && unsplashData.results.length > 0) {
-                    const imageUrl = unsplashData.results[0].urls.regular;
+                    // 从多个结果中选择最合适的图片
+                    let selectedImage = null;
+                    
+                    // 优先选择高质量图片
+                    for (let i = 0; i < unsplashData.results.length; i++) {
+                        const result = unsplashData.results[i];
+                        // 检查图片描述是否包含食物相关词汇
+                        const description = (result.description || result.alt_description || '').toLowerCase();
+                        if (description.includes('food') || description.includes('dish') || 
+                            description.includes('meal') || description.includes('cuisine') ||
+                            description.includes('cooking') || description.includes('restaurant') ||
+                            description.includes('美食') || description.includes('菜品') ||
+                            description.includes('料理') || description.includes('食べ物')) {
+                            selectedImage = result;
+                            break;
+                        }
+                    }
+                    
+                    // 如果没有找到明确的食物图片，使用第一个结果
+                    if (!selectedImage) {
+                        selectedImage = unsplashData.results[0];
+                    }
+                    
+                    const imageUrl = selectedImage.urls.regular;
                     showAIImageModal(imageUrl, dishName + ' (相关图片)');
                     showNotification('显示相关图片', 'success');
                 } else {
@@ -2144,11 +2168,13 @@
                 }
             } catch (unsplashError) {
                 console.log('Unsplash API failed, using fallback');
-                // 最终备用方案 - 使用多个备用图片
+                // 最终备用方案 - 使用多个备用菜品图片
                 const fallbackImages = [
-                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80',
-                    'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=512&h=512&fit=crop&crop=center&auto=format&q=80',
-                    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=512&h=512&fit=crop&crop=center&auto=format&q=80'
+                    'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 汉堡
+                    'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 意大利面
+                    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 沙拉
+                    'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 寿司
+                    'https://images.unsplash.com/photo-1563379091339-03246963d4b8?w=512&h=512&fit=crop&crop=center&auto=format&q=80'  // 中餐
                 ];
                 const randomImage = fallbackImages[Math.floor(Math.random() * fallbackImages.length)];
                 showAIImageModal(randomImage, dishName + ' (示例图片)');
@@ -2269,6 +2295,19 @@
         // 分析菜品类型，提供更精确的搜索关键词
         function analyzeDishType(dishName) {
             const name = dishName.toLowerCase();
+            
+            // 川菜/辣菜检测 - 优先检测
+            if (name.includes('水煮') || name.includes('麻辣') || name.includes('川菜') || 
+                name.includes('辣') || name.includes('麻婆') || name.includes('宫保') ||
+                name.includes('回锅') || name.includes('口水') || name.includes('酸菜鱼') ||
+                name.includes('剁椒') || name.includes('干锅') || name.includes('毛血旺') ||
+                name.includes('spicy') || name.includes('hot') || name.includes('sichuan')) {
+                return {
+                    english: 'sichuan spicy dish food',
+                    chinese: '川菜 辣菜 美食',
+                    japanese: '四川料理 辛い料理'
+                };
+            }
             
             // 酒类检测
             if (name.includes('wine') || name.includes('酒') || name.includes('ワイン') || 
