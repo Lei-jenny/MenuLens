@@ -2146,16 +2146,15 @@
                 
                 console.log('AI generation prompt:', prompt);
                 
-                // 使用聚光AI API生成图片
-                const juguangResponse = await fetch('https://api.juguang.chat/v1/images/generations', {
+                // 通过Vercel Serverless Function代理聚光AI API请求
+                const juguangResponse = await fetch('/api/generate-image', {
                     method: 'POST',
                     headers: {
-                        'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         prompt: prompt,
-                        model: 'juguang-image-v1', // 聚光AI图片生成模型
+                        model: 'juguang-image-v1',
                         size: '1024x1024',
                         quality: 'hd',
                         style: 'photographic',
