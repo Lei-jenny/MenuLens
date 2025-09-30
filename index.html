@@ -2153,7 +2153,8 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        prompt: prompt
+                        prompt: prompt,
+                        description_en: dish.description_en || dish.description || ''
                     })
                 });
                 
