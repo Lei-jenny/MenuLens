@@ -36,10 +36,10 @@ export default async function handler(req, res) {
         // 使用聚光AI (Juguang AI) API生成图片
         console.log(`[${requestId}] Using Gemini API for image generation`);
         
-        // 构建简化的中文prompt
-        let chinesePrompt = `生成美食图片：${prompt}`;
+        // 构建极简的中文prompt
+        let chinesePrompt = `美食图片：${prompt}`;
         
-        console.log(`[${requestId}] 构建的简化prompt:`, chinesePrompt);
+        console.log(`[${requestId}] 构建的极简prompt:`, chinesePrompt);
         
         // 使用Gemini 2.5 Flash API
         const requestBody = {
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
                 "temperature": 0.7,
                 "topK": 20,
                 "topP": 0.8,
-                "maxOutputTokens": 512
+                "maxOutputTokens": 2048
             },
             "safetySettings": [
                 {
