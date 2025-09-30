@@ -24,27 +24,63 @@ export default async function handler(req, res) {
         console.log('Timestamp:', new Date().toISOString());
         console.log('Received request:', req.body);
         
-        const { prompt, model, size, quality, style, n } = req.body;
+        const { prompt, model, size, quality, style, n, description_en } = req.body;
         
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt is required' });
         }
         
         console.log(`[${requestId}] Generating image with prompt:`, prompt);
+        console.log(`[${requestId}] Description (en):`, description_en);
         console.log(`[${requestId}] Request body:`, JSON.stringify(req.body, null, 2));
         
         // 使用聚光AI (Juguang AI) API生成图片
         console.log(`[${requestId}] Using Gemini API for image generation`);
         
-        // 使用Gemini 2.5 Flash Image Preview API
+        // 构建中文prompt，包含成分信息
+        let chinesePrompt = `请生成一张关于"${prompt}"的美食图片。`;
+        
+        if (description_en) {
+            chinesePrompt += ` 这道菜的主要成分包括：${description_en}。`;
+        }
+        
+        chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
+        
+        console.log(`[${requestId}] 构建的中文prompt:`, chinesePrompt);
+        
+        // 使用Gemini 2.5 Flash API
         const requestBody = {
             "contents": [
                 {
                     "parts": [
                         {
-                            "text": `请生成一张关于"${prompt}"的美食图片，要求：高清、专业摄影、餐厅菜品、精美摆盘、诱人的视觉效果`
+                            "text": chinesePrompt
                         }
                     ]
+                }
+            ],
+            "generationConfig": {
+                "temperature": 0.8,
+                "topK": 40,
+                "topP": 0.95,
+                "maxOutputTokens": 1024
+            },
+            "safetySettings": [
+                {
+                    "category": "HARM_CATEGORY_HARASSMENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_HATE_SPEECH",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+                },
+                {
+                    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+                    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
                 }
             ]
         };
@@ -59,7 +95,8 @@ export default async function handler(req, res) {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
             
-            geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash-image-preview:generateContent', {
+            // 尝试不同的模型端点
+            geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash:generateContent', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
@@ -295,6 +332,14 @@ export default async function handler(req, res) {
         
         // 如果没有找到图片数据，使用Unsplash作为备用
         console.log(`[${requestId}] Gemini API did not return image data in expected format, using Unsplash as fallback`);
+        console.log(`[${requestId}] Full response structure for debugging:`, {
+            hasCandidates: !!result.candidates,
+            candidatesLength: result.candidates ? result.candidates.length : 0,
+            responseKeys: Object.keys(result),
+            firstCandidateKeys: result.candidates && result.candidates[0] ? Object.keys(result.candidates[0]) : null,
+            finishReason: result.candidates && result.candidates[0] ? result.candidates[0].finishReason : null,
+            safetyRatings: result.candidates && result.candidates[0] ? result.candidates[0].safetyRatings : null
+        });
         const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
         
         if (unsplashResponse.ok) {
