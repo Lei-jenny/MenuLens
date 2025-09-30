@@ -55,16 +55,22 @@ export default async function handler(req, res) {
         try {
             console.log(`[${requestId}] Making request to Gemini API...`);
             
+            // 创建AbortController用于超时控制
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+            
             geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash-image-preview:generateContent', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(requestBody)
+                body: JSON.stringify(requestBody),
+                signal: controller.signal
             });
             
-            console.log('Gemini API request completed, status:', geminiResponse.status);
+            clearTimeout(timeoutId);
+            console.log(`[${requestId}] Gemini API request completed, status:`, geminiResponse.status);
         } catch (fetchError) {
             console.error('Gemini API fetch error:', fetchError);
             console.log('Gemini API failed due to fetch error, using Unsplash as fallback');
@@ -138,6 +144,29 @@ export default async function handler(req, res) {
         console.log(`[${requestId}] Checking Gemini response structure...`);
         console.log(`[${requestId}] Has candidates:`, !!result.candidates);
         console.log(`[${requestId}] Candidates length:`, result.candidates ? result.candidates.length : 0);
+        console.log(`[${requestId}] Response keys:`, Object.keys(result));
+        
+        // 检查是否有finishReason字段，这可能表明生成状态
+        if (result.candidates && result.candidates.length > 0) {
+            const candidate = result.candidates[0];
+            console.log(`[${requestId}] Candidate finishReason:`, candidate.finishReason);
+            console.log(`[${requestId}] Candidate safetyRatings:`, candidate.safetyRatings);
+            
+            // 检查是否因为安全原因被阻止
+            if (candidate.finishReason === 'SAFETY') {
+                console.log(`[${requestId}] Gemini API blocked due to safety concerns`);
+                console.log(`[${requestId}] Safety ratings:`, candidate.safetyRatings);
+            }
+            
+            // 检查是否因为其他原因被阻止
+            if (candidate.finishReason === 'RECITATION') {
+                console.log(`[${requestId}] Gemini API blocked due to recitation concerns`);
+            }
+            
+            if (candidate.finishReason === 'OTHER') {
+                console.log(`[${requestId}] Gemini API blocked for other reasons`);
+            }
+        }
         
         // 首先检查是否有直接的图片URL
         if (result.images && Array.isArray(result.images) && result.images.length > 0) {
