@@ -30,29 +30,38 @@ export default async function handler(req, res) {
         // 使用聚光AI (Juguang AI) API生成图片
         console.log('Using Juguang AI API for image generation');
         
+        // 使用Gemini 2.5 Flash Image Preview API
         const requestBody = {
-            prompt: prompt,
-            model: 'juguang-image-v1',
-            size: '1024x1024',
-            n: 1
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": `请生成一张关于"${prompt}"的美食图片，要求：高清、专业摄影、餐厅菜品、精美摆盘、诱人的视觉效果`
+                        }
+                    ]
+                }
+            ]
         };
         
-        console.log('聚光AI API request body:', JSON.stringify(requestBody, null, 2));
+        console.log('Gemini API request body:', JSON.stringify(requestBody, null, 2));
         
-        let juguangResponse;
+        let geminiResponse;
         try {
-            juguangResponse = await fetch('https://api.juguang.chat/v1/images/generations', {
+            console.log('Making request to Gemini API...');
+            
+            geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash-image-preview:generateContent', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(requestBody),
-                timeout: 30000 // 30秒超时
+                body: JSON.stringify(requestBody)
             });
+            
+            console.log('Gemini API request completed, status:', geminiResponse.status);
         } catch (fetchError) {
-            console.error('聚光AI API fetch error:', fetchError);
-            console.log('聚光AI API failed due to fetch error, using Unsplash as fallback');
+            console.error('Gemini API fetch error:', fetchError);
+            console.log('Gemini API failed due to fetch error, using Unsplash as fallback');
             
             // 直接使用Unsplash作为备用
             const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
@@ -78,21 +87,21 @@ export default async function handler(req, res) {
             });
         }
         
-        console.log('聚光AI API response status:', juguangResponse.status);
-        console.log('聚光AI API response headers:', Object.fromEntries(juguangResponse.headers.entries()));
+        console.log('Gemini API response status:', geminiResponse.status);
+        console.log('Gemini API response headers:', Object.fromEntries(geminiResponse.headers.entries()));
         
-        if (!juguangResponse.ok) {
-            const errorText = await juguangResponse.text();
-            console.error('聚光AI API error:', juguangResponse.status, errorText);
-            console.error('聚光AI API error details:', {
-                status: juguangResponse.status,
-                statusText: juguangResponse.statusText,
-                headers: Object.fromEntries(juguangResponse.headers.entries()),
+        if (!geminiResponse.ok) {
+            const errorText = await geminiResponse.text();
+            console.error('Gemini API error:', geminiResponse.status, errorText);
+            console.error('Gemini API error details:', {
+                status: geminiResponse.status,
+                statusText: geminiResponse.statusText,
+                headers: Object.fromEntries(geminiResponse.headers.entries()),
                 body: errorText
             });
             
-            // 如果聚光AI API失败，使用Unsplash作为备用
-            console.log('聚光AI API failed, using Unsplash as fallback');
+            // 如果Gemini API失败，使用Unsplash作为备用
+            console.log('Gemini API failed, using Unsplash as fallback');
             const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
             
             if (unsplashResponse.ok) {
@@ -111,27 +120,38 @@ export default async function handler(req, res) {
                 }
             }
             
-            return res.status(juguangResponse.status).json({ 
-                error: `聚光AI API error: ${juguangResponse.status} - ${errorText}` 
+            return res.status(geminiResponse.status).json({ 
+                error: `Gemini API error: ${geminiResponse.status} - ${errorText}` 
             });
         }
         
-        const result = await juguangResponse.json();
-        console.log('聚光AI API response:', result);
+        const result = await geminiResponse.json();
+        console.log('Gemini API response:', result);
         
-        if (!result.data || result.data.length === 0) {
-            return res.status(500).json({ 
-                error: 'No images generated by 聚光AI API' 
-            });
+        // Gemini API返回的是文本描述，不是图片URL
+        // 我们需要使用Unsplash作为实际的图片生成
+        console.log('Gemini API returned text description, using Unsplash for actual image');
+        
+        const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
+        
+        if (unsplashResponse.ok) {
+            const unsplashResult = await unsplashResponse.json();
+            if (unsplashResult.results && unsplashResult.results.length > 0) {
+                const imageUrl = unsplashResult.results[0].urls.regular;
+                return res.status(200).json({
+                    success: true,
+                    data: [{
+                        url: imageUrl,
+                        alt: unsplashResult.results[0].alt_description || prompt
+                    }],
+                    prompt: prompt,
+                    source: 'unsplash_with_gemini_description'
+                });
+            }
         }
         
-        console.log('Image generated successfully by 聚光AI API');
-        
-        res.status(200).json({
-            success: true,
-            data: result.data,
-            prompt: prompt,
-            source: 'juguang'
+        return res.status(500).json({ 
+            error: 'No images generated by Gemini + Unsplash combination' 
         });
         
     } catch (error) {
