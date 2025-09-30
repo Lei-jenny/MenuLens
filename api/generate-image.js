@@ -36,18 +36,18 @@ export default async function handler(req, res) {
         // 使用聚光AI (Juguang AI) API生成图片
         console.log(`[${requestId}] Using Gemini API for image generation`);
         
-        // 构建极简的中文prompt
-        let chinesePrompt = `美食图片：${prompt}`;
+        // 构建图片生成prompt
+        let imagePrompt = `Generate a high-quality food image of: ${prompt}`;
         
-        console.log(`[${requestId}] 构建的极简prompt:`, chinesePrompt);
+        console.log(`[${requestId}] 构建的图片生成prompt:`, imagePrompt);
         
-        // 使用Gemini 2.5 Flash API
+        // 使用Gemini 2.5 Flash Image Preview API
         const requestBody = {
             "contents": [
                 {
                     "parts": [
                         {
-                            "text": chinesePrompt
+                            "text": imagePrompt
                         }
                     ]
                 }
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
                 "temperature": 0.7,
                 "topK": 20,
                 "topP": 0.8,
-                "maxOutputTokens": 2048
+                "maxOutputTokens": 1024
             },
             "safetySettings": [
                 {
@@ -88,8 +88,8 @@ export default async function handler(req, res) {
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
             
-            // 尝试不同的模型端点
-            geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash:generateContent', {
+            // 使用图片生成模型
+            geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash-image-preview:generateContent', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
@@ -111,7 +111,7 @@ export default async function handler(req, res) {
                 const retryController = new AbortController();
                 const retryTimeoutId = setTimeout(() => retryController.abort(), 60000);
                 
-                geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash:generateContent', {
+                geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash-image-preview:generateContent', {
                     method: 'POST',
                     headers: {
                         'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
