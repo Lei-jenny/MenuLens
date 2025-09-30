@@ -2134,8 +2134,10 @@
                 // 使用AI图片生成服务
                 console.log('Generating AI image for:', dishName);
                 
-                // 构建AI提示词
+                // 构建AI提示词，包含成分信息
                 let prompt = '';
+                const description = dish.description_en || dish.description || '';
+                
                 if (originalLanguage === 'zh') {
                     prompt = `${dishName} ${dishType.chinese} 美食 高清 专业摄影 餐厅菜品 精美摆盘`;
                 } else if (originalLanguage === 'ja') {
@@ -2144,18 +2146,28 @@
                     prompt = `${dishName} ${dishType.english} food, high quality, professional photography, restaurant dish, beautiful plating`;
                 }
                 
+                // 如果有成分描述，添加到prompt中
+                if (description) {
+                    prompt += ` 成分：${description}`;
+                }
+                
                 console.log('AI generation prompt:', prompt);
+                console.log('Final prompt length:', prompt.length);
+                console.log('Description included:', description ? 'Yes' : 'No');
                 
                 // 通过Vercel Serverless Function代理Gemini API请求
+                const requestBody = {
+                    prompt: prompt
+                };
+                
+                console.log('Request body being sent:', JSON.stringify(requestBody, null, 2));
+                
                 const geminiResponse = await fetch('/api/generate-image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        prompt: prompt,
-                        description_en: dish.description_en || dish.description || ''
-                    })
+                    body: JSON.stringify(requestBody)
                 });
                 
                 if (geminiResponse.ok) {
