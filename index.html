@@ -2146,25 +2146,20 @@
                 
                 console.log('AI generation prompt:', prompt);
                 
-                // 通过Vercel Serverless Function代理聚光AI API请求
-                const juguangResponse = await fetch('/api/generate-image', {
+                // 通过Vercel Serverless Function代理Gemini API请求
+                const geminiResponse = await fetch('/api/generate-image', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        prompt: prompt,
-                        model: 'juguang-image-v1',
-                        size: '1024x1024',
-                        quality: 'hd',
-                        style: 'photographic',
-                        n: 1
+                        prompt: prompt
                     })
                 });
                 
-                if (juguangResponse.ok) {
-                    const result = await juguangResponse.json();
-                    console.log('聚光AI response:', result);
+                if (geminiResponse.ok) {
+                    const result = await geminiResponse.json();
+                    console.log('Gemini API response:', result);
                     
                     if (result.data && result.data.length > 0) {
                         // 选择第一张图片
@@ -2175,10 +2170,10 @@
                         throw new Error('No images generated');
                     }
                 } else {
-                    throw new Error('聚光AI API failed');
+                    throw new Error('Gemini API failed');
                 }
-            } catch (juguangError) {
-                console.log('聚光AI API failed, using fallback');
+            } catch (geminiError) {
+                console.log('Gemini API failed, using fallback');
                 // 最终备用方案 - 使用多个备用菜品图片
                 const fallbackImages = [
                     'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=512&h=512&fit=crop&crop=center&auto=format&q=80', // 汉堡
