@@ -132,12 +132,40 @@ export default async function handler(req, res) {
         }
         
         const result = await geminiResponse.json();
-        console.log('Gemini API response:', JSON.stringify(result, null, 2));
+        console.log(`[${requestId}] Gemini API response:`, JSON.stringify(result, null, 2));
         
         // 检查Gemini API响应的实际结构
-        console.log('Checking Gemini response structure...');
-        console.log('Has candidates:', !!result.candidates);
-        console.log('Candidates length:', result.candidates ? result.candidates.length : 0);
+        console.log(`[${requestId}] Checking Gemini response structure...`);
+        console.log(`[${requestId}] Has candidates:`, !!result.candidates);
+        console.log(`[${requestId}] Candidates length:`, result.candidates ? result.candidates.length : 0);
+        
+        // 首先检查是否有直接的图片URL
+        if (result.images && Array.isArray(result.images) && result.images.length > 0) {
+            console.log(`[${requestId}] Found images in result.images:`, result.images);
+            return res.status(200).json({
+                success: true,
+                data: result.images.map(img => ({
+                    url: img.url || img,
+                    alt: prompt
+                })),
+                prompt: prompt,
+                source: 'gemini_direct'
+            });
+        }
+        
+        // 检查是否有其他直接的图片字段
+        if (result.image && result.image.url) {
+            console.log(`[${requestId}] Found image in result.image:`, result.image);
+            return res.status(200).json({
+                success: true,
+                data: [{
+                    url: result.image.url,
+                    alt: prompt
+                }],
+                prompt: prompt,
+                source: 'gemini_single'
+            });
+        }
         
         if (result.candidates && result.candidates.length > 0) {
             const candidate = result.candidates[0];
@@ -203,8 +231,41 @@ export default async function handler(req, res) {
             });
         }
         
+        // 检查是否有文本描述（可能Gemini返回的是文本而不是图片）
+        if (result.candidates && result.candidates.length > 0) {
+            const candidate = result.candidates[0];
+            if (candidate.content && candidate.content.parts) {
+                for (const part of candidate.content.parts) {
+                    if (part.text) {
+                        console.log(`[${requestId}] Gemini returned text instead of image:`, part.text);
+                        // 如果返回的是文本描述，我们可以使用这个描述来搜索Unsplash
+                        const searchQuery = part.text.substring(0, 100); // 限制长度
+                        console.log(`[${requestId}] Using Gemini text description for Unsplash search:`, searchQuery);
+                        
+                        const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
+                        
+                        if (unsplashResponse.ok) {
+                            const unsplashResult = await unsplashResponse.json();
+                            if (unsplashResult.results && unsplashResult.results.length > 0) {
+                                const imageUrl = unsplashResult.results[0].urls.regular;
+                                return res.status(200).json({
+                                    success: true,
+                                    data: [{
+                                        url: imageUrl,
+                                        alt: part.text.substring(0, 100)
+                                    }],
+                                    prompt: prompt,
+                                    source: 'unsplash_with_gemini_description'
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
         // 如果没有找到图片数据，使用Unsplash作为备用
-        console.log('Gemini API did not return image data in expected format, using Unsplash as fallback');
+        console.log(`[${requestId}] Gemini API did not return image data in expected format, using Unsplash as fallback`);
         const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
         
         if (unsplashResponse.ok) {
