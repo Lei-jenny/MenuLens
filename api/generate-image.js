@@ -24,14 +24,13 @@ export default async function handler(req, res) {
         console.log('Timestamp:', new Date().toISOString());
         console.log('Received request:', req.body);
         
-        const { prompt, model, size, quality, style, n, description_en } = req.body;
+        const { prompt, model, size, quality, style, n } = req.body;
         
         if (!prompt) {
             return res.status(400).json({ error: 'Prompt is required' });
         }
         
         console.log(`[${requestId}] Generating image with prompt:`, prompt);
-        console.log(`[${requestId}] Description (en):`, description_en);
         console.log(`[${requestId}] Request body:`, JSON.stringify(req.body, null, 2));
         
         // 使用聚光AI (Juguang AI) API生成图片
@@ -40,11 +39,12 @@ export default async function handler(req, res) {
         // 构建中文prompt，包含成分信息
         let chinesePrompt = `请生成一张关于"${prompt}"的美食图片。`;
         
-        if (description_en) {
-            chinesePrompt += ` 这道菜的主要成分包括：${description_en}。`;
+        // 检查prompt中是否已经包含成分信息（以"成分："开头）
+        if (prompt.includes('成分：') || prompt.includes('ingredients:')) {
+            chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
+        } else {
+            chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
         }
-        
-        chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
         
         console.log(`[${requestId}] 构建的中文prompt:`, chinesePrompt);
         
