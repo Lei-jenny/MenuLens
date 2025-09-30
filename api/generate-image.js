@@ -36,17 +36,10 @@ export default async function handler(req, res) {
         // 使用聚光AI (Juguang AI) API生成图片
         console.log(`[${requestId}] Using Gemini API for image generation`);
         
-        // 构建中文prompt，包含成分信息
-        let chinesePrompt = `请生成一张关于"${prompt}"的美食图片。`;
+        // 构建简化的中文prompt
+        let chinesePrompt = `生成美食图片：${prompt}`;
         
-        // 检查prompt中是否已经包含成分信息（以"成分："开头）
-        if (prompt.includes('成分：') || prompt.includes('ingredients:')) {
-            chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
-        } else {
-            chinesePrompt += ` 要求：图片尺寸600x600像素，清晰度适中，专业摄影风格，餐厅菜品摆盘，美观诱人。`;
-        }
-        
-        console.log(`[${requestId}] 构建的中文prompt:`, chinesePrompt);
+        console.log(`[${requestId}] 构建的简化prompt:`, chinesePrompt);
         
         // 使用Gemini 2.5 Flash API
         const requestBody = {
@@ -60,10 +53,10 @@ export default async function handler(req, res) {
                 }
             ],
             "generationConfig": {
-                "temperature": 0.8,
-                "topK": 40,
-                "topP": 0.95,
-                "maxOutputTokens": 1024
+                "temperature": 0.7,
+                "topK": 20,
+                "topP": 0.8,
+                "maxOutputTokens": 512
             },
             "safetySettings": [
                 {
@@ -108,6 +101,29 @@ export default async function handler(req, res) {
             
             clearTimeout(timeoutId);
             console.log(`[${requestId}] Gemini API request completed, status:`, geminiResponse.status);
+            
+            // 如果是429错误，等待一段时间后重试一次
+            if (geminiResponse.status === 429) {
+                console.log(`[${requestId}] Rate limit hit, waiting 2 seconds before retry...`);
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                console.log(`[${requestId}] Retrying Gemini API request...`);
+                const retryController = new AbortController();
+                const retryTimeoutId = setTimeout(() => retryController.abort(), 60000);
+                
+                geminiResponse = await fetch('https://ai.juguang.chat/v1beta/models/gemini-2.5-flash:generateContent', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer sk-o4mIilLIlhQurOQ8TE1DhtCQYk7m4Q8sR0foh2JCvYzuDfHX',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody),
+                    signal: retryController.signal
+                });
+                
+                clearTimeout(retryTimeoutId);
+                console.log(`[${requestId}] Gemini API retry completed, status:`, geminiResponse.status);
+            }
         } catch (fetchError) {
             console.error('Gemini API fetch error:', fetchError);
             console.log('Gemini API failed due to fetch error, using Unsplash as fallback');
@@ -141,16 +157,21 @@ export default async function handler(req, res) {
         
         if (!geminiResponse.ok) {
             const errorText = await geminiResponse.text();
-            console.error('Gemini API error:', geminiResponse.status, errorText);
-            console.error('Gemini API error details:', {
+            console.error(`[${requestId}] Gemini API error:`, geminiResponse.status, errorText);
+            console.error(`[${requestId}] Gemini API error details:`, {
                 status: geminiResponse.status,
                 statusText: geminiResponse.statusText,
                 headers: Object.fromEntries(geminiResponse.headers.entries()),
                 body: errorText
             });
             
-            // 如果Gemini API失败，使用Unsplash作为备用
-            console.log('Gemini API failed, using Unsplash as fallback');
+            // 检查是否是配额超限错误
+            if (geminiResponse.status === 429) {
+                console.log(`[${requestId}] Gemini API quota exceeded, using Unsplash as fallback`);
+                console.log(`[${requestId}] Error message: You exceeded your current quota, please check your plan and billing details`);
+            } else {
+                console.log(`[${requestId}] Gemini API failed with status ${geminiResponse.status}, using Unsplash as fallback`);
+            }
             const unsplashResponse = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(prompt)}&per_page=3&orientation=landscape&order_by=relevant&client_id=YRtZM4GfSkIrBBbFBFlrDO98J91yjUBEhgxRx1yblA4`);
             
             if (unsplashResponse.ok) {
